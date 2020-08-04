@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Learn French</string>
+    <string name="what_does_the_image_represent">What does the image represent</string>
+    <string name="ok">Ok</string>
+    <string name="what_is_the_arabic_translation_of">What is the arabic translation of</string>
+    <string name="choose_the_french_synonym_which_match_with_the_picture">Choose the french synonym which match with the picture</string>
+    <string name="first_level">First Level</string>
+    <string name="second_level">Second Level</string>
+    <string name="choose_the_french_synonym_of_the_arabic_word">Choose the arabic meaning of the french word</string>
+    <string name="third_level">Third Level</string>
+    <string name="writr_the_french_synonym_which_match_with_the_picture_you_can_listen_to_its_spelling">Write the french synonym which match with the picture (you can listen to its spelling)</string>
+    <string name="warning">Waring</string>
+    <string name="Your_answer_is_wrong">Your answer is wrong</string>
+    <string name="info">Info</string>
+    <string name="Your_answer_is_correct">Your answer is correct</string>
+    <string name="game_over_label">Your lose all chances....game over...try again</string>
+    <string name="Please_fill_the_answer_field">Please fill the answer field</string>
+    <string name="This_level_is_locked">This level is locked</string>
+    <string name="go_to_next_level">Congratulations ... you have finished this level and you can move to the next level</string>
+    <string name="all_phases_finish">Congratulations ... you have finished all phases of the game</string>
+</resources>

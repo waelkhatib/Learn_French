@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Learn French</string>
+    <string name="what_is_the_arabic_translation_of">"ما هي الترجمة العربية لكلمة "</string>
+    <string name="choose_the_french_synonym_which_match_with_the_picture">اختر المرادف الفرنسي الذي يناسب الصورة</string>
+    <string name="first_level">المستوى الأول</string>
+    <string name="second_level">المستوى الثاني</string>
+    <string name="choose_the_french_synonym_of_the_arabic_word">اختر المعنى العربي للكلمة الفرنسية</string>
+    <string name="what_does_the_image_represent">ماذا تمثل الصورة</string>
+    <string name="ok">موافق</string>
+    <string name="third_level">المستوى الثالث</string>
+    <string name="writr_the_french_synonym_which_match_with_the_picture_you_can_listen_to_its_spelling">اكتب المرادف الفرنسي الذي يناسب الصورة ويمكنك سماع التهجئة</string>
+    <string name="game_over_label">لقد خسرت جميع فرصك...انتهت اللعبة....حاول ثانية!</string>
+    <string name="Your_answer_is_correct">جواب صحيح</string>
+    <string name="info">استعلام</string>
+    <string name="warning">تحذير</string>
+    <string name="Your_answer_is_wrong">جواب خاطئ</string>
+    <string name="This_level_is_locked">هذا المستوى مقفل</string>
+    <string name="Please_fill_the_answer_field">املأ حقل الإجابة من فضلك</string>
+    <string name="go_to_next_level">مبروك...لقد أنهيت هذا المستوى ويمكنك الانتقال إلى المستوى التالي</string>
+    <string name="all_phases_finish">مبروك...لقد أنهيت جميع مراحل اللعبة</string>
+</resources>
