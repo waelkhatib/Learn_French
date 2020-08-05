@@ -55,6 +55,12 @@ public class FirstLevelActivity extends AppCompatActivity  implements View.OnCli
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        behavior.resumeMusic();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         behavior.stoptMusic();

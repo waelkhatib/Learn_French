@@ -48,7 +48,11 @@ public class SecondLevelActivity extends AppCompatActivity implements View.OnCli
     public void onBackPressed() {
         behavior.finish();
     }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        behavior.resumeMusic();
+    }
     @Override
     protected void onPause() {
         super.onPause();

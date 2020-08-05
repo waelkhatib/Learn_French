@@ -18,6 +18,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -27,6 +28,8 @@ import com.waelalk.learnfrench.model.Translation;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "transl.db";
+    String table = "words";
+    String[] columnsToReturn = { "ID", "synonym","synonym_ar" };
 
 
     private Context context;
@@ -53,9 +56,11 @@ public class DBHelper extends SQLiteOpenHelper {
             }
             br.close();
             for (String stmt:TextUtils.split(text.toString(),";")) {
-                db.execSQL(
-                        stmt
-                );
+                SQLiteStatement stmt1 = db.compileStatement(stmt);
+                stmt1.execute();
+//                db.execSQL(
+//                        stmt
+//                );
             }
         }catch (IOException e){
 
@@ -66,25 +71,19 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-        db.execSQL("DROP TABLE IF EXISTS words");
+        //db.execSQL("DROP TABLE IF EXISTS words");
+        SQLiteStatement stmt1 = db.compileStatement("DROP TABLE IF EXISTS words");
+        stmt1.execute();
         onCreate(db);
     }
 
-    public int getContactsCount() {
-        String countQuery = "SELECT  * FROM words";
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        int count=cursor.getCount();
-        cursor.close();
-
-        // return count
-        return count;
-    }
     public Translation getSingleTranslate(int id) {
-        String selectQuery = "SELECT  * FROM Words where ID="+id;
+
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        String selection = "ID= ?";
+        Cursor cursor = db.query(table, columnsToReturn, selection, new String[]{""+id}, null, null, null);
+
         if (cursor!=null)
             cursor.moveToFirst();
         Translation translation=new Translation(cursor.getInt(0),cursor.getString(1),cursor.getString(2),true);
@@ -94,10 +93,12 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<Translation> getSpecificTranslations(List<Integer> IDs) {
         List<Translation> translateList = new ArrayList<Translation>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM  words where ID in (" +TextUtils.join(",",IDs)+") order by id asc";
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+
+
+        String selection = "ID in  ("+TextUtils.join(",",IDs)+")";
+        Cursor cursor = db.query(table, columnsToReturn, selection, null, null, null, null);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {

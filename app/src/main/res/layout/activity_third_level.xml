@@ -81,6 +81,7 @@
         android:text="@string/ok"
         android:textSize="20dp"
         android:onClick="onClick"
+        android:filterTouchesWhenObscured="true"
         android:id="@+id/ok"
         android:textAllCaps="false"
         android:textColor="@android:color/white"

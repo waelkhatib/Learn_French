@@ -62,6 +62,11 @@ public class ThirdLevelActivity extends AppCompatActivity implements View.OnClic
         behavior.stoptMusic();
     }
     @Override
+    protected void onResume() {
+        super.onResume();
+        behavior.resumeMusic();
+    }
+    @Override
     public void onBackPressed() {
         behavior.finish();
     }

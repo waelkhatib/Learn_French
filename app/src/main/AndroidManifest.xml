@@ -3,7 +3,7 @@
     package="com.waelalk.learnfrench">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@drawable/flag"
         android:label="@string/app_name"
         android:roundIcon="@drawable/flag"

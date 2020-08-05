@@ -60,6 +60,11 @@ public class FirstLevelBehavior implements Initialization {
     }
 
     @Override
+    public void resumeMusic() {
+       levelHelper.getMainPlayer().start();
+    }
+
+    @Override
     public void share() {
         Bitmap bitmap= BitmapFactory.decodeResource(getLevelHelper(). getResources(),getLevelHelper(). getResources().getIdentifier("img"+ getLevel().getQuestions().get(getLevel().getQuestionNo()-1),"drawable",getLevelHelper(). getPackageName()));
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/LatestShare.jpg";
@@ -194,7 +199,7 @@ public class FirstLevelBehavior implements Initialization {
             activity.startActivity(intent);
         }
         else {
-            Intent intent=new Intent();
+            Intent intent=new Intent(getLevelHelper().getContext(),MainActivity.class);
             intent.putExtra("levelNo",getLevel().getLevelNo());
             activity.setResult(Activity.RESULT_OK, intent);
         }
