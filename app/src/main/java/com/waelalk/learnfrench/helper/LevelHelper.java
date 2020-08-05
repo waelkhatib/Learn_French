@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
@@ -17,8 +18,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class LevelHelper {
     private static final int request_code=32;
+
+    public static String getSharedPrefs() {
+        return SHARED_PREFS;
+    }
+
+    private static final String SHARED_PREFS = "sharedPrefs";
+    private static final String KEY = "myKey";
+
+    public static String getKEY() {
+        return KEY;
+    }
+
+    public  SharedPreferences getSharedPreferences(){
+        return context.getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+    }
 
     public static int getQuestionCount() {
         return QuestionCount;

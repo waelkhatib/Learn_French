@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.gson.Gson;
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.behavior.FirstLevelBehavior;
 import com.waelalk.learnfrench.behavior.Initialization;
@@ -24,31 +25,34 @@ public class FirstLevelActivity extends AppCompatActivity  implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_level);
         LevelHelper levelHelper=new LevelHelper(this);
-        behavior=new FirstLevelBehavior(this,levelHelper, new Level(1));
+        Intent intent=getIntent();
+        String content=intent.getStringExtra(LevelHelper.getKEY());
+        Level level=content!=null?new Gson().fromJson(content,Level.class) : new Level(1);
+        behavior=new FirstLevelBehavior(this,levelHelper, level);
         behavior.startMusic();
        behavior. initViews();
-        findViewById(R.id.share).setOnClickListener(this);
+
 
     }
 
 
     @Override
     public void onClick(View v) {
-    if(v==findViewById(R.id.share)){
-     behavior.share();
-    }else {
         for (int i = 0; i < viewIDs.length; i++) {
             if (v == findViewById(viewIDs[i])) {
 
                 behavior.checkAnswer(((Button) v).getText());
                 break;
             }
-        }
-    }
 
     }
 
+    }
 
+    @Override
+    public void onBackPressed() {
+        behavior.finish();
+    }
 
     @Override
     protected void onPause() {

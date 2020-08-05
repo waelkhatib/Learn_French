@@ -1,11 +1,13 @@
 package com.waelalk.learnfrench.view;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.behavior.Initialization;
 import com.waelalk.learnfrench.behavior.ThirdLevelBehavior;
@@ -21,7 +23,10 @@ public class ThirdLevelActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_third_level);
         LevelHelper levelHelper=new LevelHelper(this);
-        behavior=new ThirdLevelBehavior(this,levelHelper, new Level(3));
+        Intent intent=getIntent();
+        String content=intent.getStringExtra(LevelHelper.getKEY());
+        Level level=content!=null?new Gson().fromJson(content,Level.class) : new Level(3);
+        behavior=new ThirdLevelBehavior(this,levelHelper,level);
         behavior.startMusic();
         behavior. initViews();
     }
@@ -55,6 +60,10 @@ public class ThirdLevelActivity extends AppCompatActivity implements View.OnClic
     protected void onPause() {
         super.onPause();
         behavior.stoptMusic();
+    }
+    @Override
+    public void onBackPressed() {
+        behavior.finish();
     }
 
 

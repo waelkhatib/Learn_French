@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkIntent(getIntent());
         mediaPlayer=MediaPlayer.create(this,R.raw.music);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
@@ -63,15 +64,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+          checkIntent(data);
 
-          int levelNo=data.getIntExtra("levelNo",-1);
-          if(levelNo==2){
-              ((ImageView)findViewById(R.id.lock2)).setImageResource(R.drawable.open_lock);
-          }else
-          if(levelNo>2){
-              ((ImageView)findViewById(R.id.lock2)).setImageResource(R.drawable.open_lock);
-              ((ImageView)findViewById(R.id.lock3)).setImageResource(R.drawable.open_lock);
-          }
 
+    }
+
+    private void checkIntent(Intent data) {
+        int levelNo=data.getIntExtra("levelNo",-1);
+        if(levelNo==2){
+            ((ImageView)findViewById(R.id.lock2)).setImageResource(R.drawable.open_lock);
+        }else
+        if(levelNo>2){
+            ((ImageView)findViewById(R.id.lock2)).setImageResource(R.drawable.open_lock);
+            ((ImageView)findViewById(R.id.lock3)).setImageResource(R.drawable.open_lock);
+        }
     }
 }

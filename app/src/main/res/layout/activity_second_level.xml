@@ -21,7 +21,7 @@
         <TextView
             android:textColor="@android:color/white"
             android:textAllCaps="false"
-
+            android:id="@+id/lbl"
             android:textSize="20dp"
             android:text="@string/what_is_the_arabic_translation_of"
             android:layout_width="wrap_content"

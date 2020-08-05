@@ -1,5 +1,6 @@
 package com.waelalk.learnfrench.behavior;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
@@ -41,4 +42,12 @@ public class SecondLevelBehavior extends FirstLevelBehavior {
         }
     }
 
+    @Override
+    public void share() {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, ((TextView)getActivity().findViewById(R.id.lbl)).getText().toString()+((TextView)getActivity().findViewById(R.id.txtView)).getText().toString());
+        getActivity(). startActivity(Intent.createChooser(sharingIntent, "Share Image Using"));
+    }
 }

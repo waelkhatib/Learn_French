@@ -1,11 +1,15 @@
 package com.waelalk.learnfrench.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.google.gson.Gson;
 import com.waelalk.learnfrench.R;
+import com.waelalk.learnfrench.helper.LevelHelper;
+import com.waelalk.learnfrench.model.Level;
 
 public class SplashActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 3000;
@@ -19,9 +23,37 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashActivity.this, MainActivity.class);
-                startActivity(i);
-
+                SharedPreferences sharedPreferences = getSharedPreferences(LevelHelper.getSharedPrefs(), MODE_PRIVATE);
+                String text = sharedPreferences.getString(LevelHelper.getKEY(), "");
+                if(text.equals("")) {
+                    Intent i = new Intent(SplashActivity.this, MainActivity.class);
+                    startActivity(i);
+                }else {
+                    Level level=new Gson().fromJson(text,Level.class);
+                    Intent i;
+                    switch (level.getLevelNo()){
+                        case 1:
+                            i = new Intent(SplashActivity.this, FirstLevelActivity.class);
+                            i.putExtra(LevelHelper.getKEY(),text);
+                            startActivityForResult(i,LevelHelper.getRequestCode());
+                            break;
+                        case 2:
+                            i = new Intent(SplashActivity.this, SecondLevelActivity.class);
+                            i.putExtra(LevelHelper.getKEY(),text);
+                            startActivityForResult(i,LevelHelper.getRequestCode());
+                            break;
+                        case 3:
+                            i = new Intent(SplashActivity.this, ThirdLevelActivity.class);
+                            i.putExtra(LevelHelper.getKEY(),text);
+                            startActivityForResult(i,LevelHelper.getRequestCode());
+                            break;
+                        default:
+                          i = new Intent(SplashActivity.this, MainActivity.class);
+                            i.putExtra("levelNo",level.getLevelNo());
+                            startActivity(i);
+                            break;
+                    }
+                }
                 // close this activity
                 finish();
             }

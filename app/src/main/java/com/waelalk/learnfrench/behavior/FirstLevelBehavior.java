@@ -3,19 +3,27 @@ package com.waelalk.learnfrench.behavior;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.helper.LevelHelper;
 import com.waelalk.learnfrench.model.Level;
 import com.waelalk.learnfrench.model.Translation;
 import com.waelalk.learnfrench.view.MainActivity;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public class FirstLevelBehavior implements Initialization {
@@ -53,13 +61,25 @@ public class FirstLevelBehavior implements Initialization {
 
     @Override
     public void share() {
+        Bitmap bitmap= BitmapFactory.decodeResource(getLevelHelper(). getResources(),getLevelHelper(). getResources().getIdentifier("img"+ getLevel().getQuestions().get(getLevel().getQuestionNo()-1),"drawable",getLevelHelper(). getPackageName()));
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/LatestShare.jpg";
+        OutputStream out = null;
+        File file=new File(path);
+        try {
+            out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        path=file.getPath();
+        Uri bmpUri = Uri.parse("file://"+path);
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        sharingIntent.setType("image/*");
-        sharingIntent.putExtra(Intent.EXTRA_STREAM,  Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
-                "://" + getLevelHelper().getPackageName()
-                + "/drawable/img"
-                + getLevel().getQuestions().get(getLevel().getQuestionNo()-1)));
+        sharingIntent.setType("image/png");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM,  bmpUri);
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, ((TextView)activity.findViewById(R.id.lbl)).getText());
        activity. startActivity(Intent.createChooser(sharingIntent, "Share Image Using"));
     }
 
@@ -67,6 +87,7 @@ public class FirstLevelBehavior implements Initialization {
     public void checkAnswer(CharSequence answer) {
         levelHelper.getMainPlayer().pause();
         getLevel().updateQuestionNo(1);
+        SharedPreferences.Editor editor = levelHelper.getSharedPreferences().edit();
         if(answer.equals(correctAnswer)){
             getLevel().updatePoints(LevelHelper.getPointValue());
             if(getLevel().getQuestionNo()>LevelHelper.getQuestionCount()){
@@ -80,8 +101,12 @@ public class FirstLevelBehavior implements Initialization {
                 if(levelNo>3){
                     message=levelHelper.getString(R.string.all_phases_finish);
                 }
+                editor.putString(LevelHelper.getKEY(),new Gson().toJson(new Level(levelNo)));
+                editor.apply();
                 levelHelper.makeMessageBox(levelHelper.getString(R.string.info), message, 2, this);
             }else {
+                editor.putString(LevelHelper.getKEY(),new Gson().toJson(getLevel()));
+                editor.apply();
                 levelHelper.startWinTone();
                 levelHelper.makeMessageBox(levelHelper.getString(R.string.info), levelHelper.getString(R.string.Your_answer_is_correct), 1, this);
             }
@@ -90,9 +115,13 @@ public class FirstLevelBehavior implements Initialization {
                 getLevel().updatePoints(-LevelHelper.getPointValue()*2);
                 getLevel().updateChancesNo(-1);
                 levelHelper.startFailTone();
+                editor.putString(LevelHelper.getKEY(),new Gson().toJson(getLevel()));
+                editor.apply();
                 levelHelper.  makeMessageBox(levelHelper.getString(R.string.warning),levelHelper.getString(R.string.Your_answer_is_wrong),1,this);
             }else {
                 levelHelper.startGameOverTone();
+                editor.putString(LevelHelper.getKEY(),new Gson().toJson(new Level(getLevel().getLevelNo())));
+                editor.apply();
                 levelHelper. makeMessageBox(levelHelper.getString(R.string.warning),levelHelper.getString(R.string.game_over_label),2,this);
             }
 
@@ -107,6 +136,12 @@ public class FirstLevelBehavior implements Initialization {
         this.level = level;
     }
     public void initHeader(){
+       getActivity(). findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               share();
+           }
+       });
         switch (getLevel().getChancesNo()){
             case 2:
                 getActivity().findViewById(R.id.chnc3).setVisibility(View.GONE);
@@ -122,7 +157,7 @@ public class FirstLevelBehavior implements Initialization {
             default:break;
         }
         ((TextView)getActivity().findViewById(R.id.points)).setText(""+getLevel().getPoints());
-        ((TextView)getActivity().findViewById(R.id.status)).setText(""+getLevel().getQuestionNo()+"/"+LevelHelper.getQuestionCount());
+        ((TextView)getActivity().findViewById(R.id.status)).setText(""+getLevel().getQuestionNoForHeader()+"/"+LevelHelper.getQuestionCount());
     }
 
     @Override

@@ -25,7 +25,7 @@ public class Level {
         this.chancesNo = 3;
         this.points = 0;
         this.questionNo = 1;
-        this.questions=LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount());
+        this.questions=LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2);
     }
 
     public Level(int levelNo, int questionNo, List<Integer> current_question, int chancesNo, int points) {
@@ -38,6 +38,9 @@ public class Level {
 
     public int getQuestionNo() {
         return questionNo;
+    }
+    public int getQuestionNoForHeader() {
+        return questionNo>LevelHelper.getQuestionCount()?LevelHelper.getQuestionCount():questionNo;
     }
 
     public void updateQuestionNo(int delta) {

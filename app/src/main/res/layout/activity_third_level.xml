@@ -37,6 +37,7 @@
             android:textColor="@android:color/white"
             android:textAllCaps="false"
              android:layout_gravity="center_vertical"
+            android:id="@+id/lbl"
             android:layout_marginStart="8dp"
             android:textSize="20dp"
             android:text="@string/what_does_the_image_represent"
