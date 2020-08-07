@@ -6,15 +6,30 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
+import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.tomergoldst.tooltips.ToolTip;
+import com.tomergoldst.tooltips.ToolTipsManager;
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.helper.LevelHelper;
 import com.waelalk.learnfrench.model.Level;
@@ -27,11 +42,36 @@ import java.io.OutputStream;
 import java.util.List;
 
 public class FirstLevelBehavior implements Initialization {
+    private ToolTipsManager mToolTipsManager;;
+    private String message="1";
+    private boolean loaded=false;
+
+    public FirstLevelBehavior(AppCompatActivity activity, LevelHelper levelHelper, Level level) {
+        this.activity = activity;
+        this.levelHelper = levelHelper;
+        this.level = level;
+        mToolTipsManager=new ToolTipsManager();
+
+       this.trans = new TransitionDrawable(new Drawable[] {levelHelper.getResources().getDrawable(R.drawable.rectangle), levelHelper.getResources().getDrawable(R.drawable.blue_rectangle)});
+        this.timer=new CountDownTimer(10000, 500) {
+
+            public void onTick(long millisUntilFinished) {
+                trans.startTransition(500);
+            }
+
+            public void onFinish() {
+                trans.reverseTransition(500);
+            }
+        };
+
+    }
     public AppCompatActivity getActivity() {
         return activity;
     }
 
     private AppCompatActivity activity;
+
+    private TransitionDrawable trans;
 
     public LevelHelper getLevelHelper() {
         return levelHelper;
@@ -44,6 +84,18 @@ public class FirstLevelBehavior implements Initialization {
     }
 
     private String correctAnswer;
+
+    private CountDownTimer timer;
+
+    public View getCorrectButton() {
+        return correctButton;
+    }
+
+    public void setCorrectButton(View correctButton) {
+        this.correctButton = correctButton;
+    }
+
+    private View correctButton=null;
 
     public Level getLevel() {
         return level;
@@ -91,14 +143,45 @@ public class FirstLevelBehavior implements Initialization {
     @Override
     public void checkAnswer(CharSequence answer) {
         levelHelper.getMainPlayer().pause();
+        getActivity().findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+        final WebView web = (WebView)getActivity(). findViewById(R.id.emot);
+        web.setBackgroundColor(Color.TRANSPARENT); //for gif without background
+        loaded=true;
+        web.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                Log.d("dim","s3"+url);
+                if(loaded) {
+                    Log.d("dim","s4");
+                    view.setVisibility(View.VISIBLE);
+
+
+                }
+            }
+        });
+        web.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.d("dim","s1");
+                if(web.getVisibility()==View.VISIBLE && loaded){
+                    Log.d("dim","s2");
+                    ToolTip.Builder builder = new ToolTip.Builder(levelHelper.getContext(), web, (RelativeLayout) getActivity().findViewById(R.id.rlt_layout), message, ToolTip.POSITION_ABOVE);
+                    builder.setBackgroundColor(levelHelper.getResources().getColor(R.color.colorAccent));
+                    mToolTipsManager.show(builder.build());
+                }
+            }
+        });
         getLevel().updateQuestionNo(1);
         SharedPreferences.Editor editor = levelHelper.getSharedPreferences().edit();
+        //String message="";
         if(answer.equals(correctAnswer)){
             getLevel().updatePoints(LevelHelper.getPointValue());
+
+
             if(getLevel().getQuestionNo()>LevelHelper.getQuestionCount()){
               levelHelper.startVictoryTone();
               getLevel().setLevelNo(getLevel().getLevelNo()+1);
-              String message="";
+
               int levelNo=getLevel().getLevelNo();
                 if(levelNo==2 || levelNo==3){
                     message=levelHelper.getString(R.string.go_to_next_level);
@@ -106,6 +189,7 @@ public class FirstLevelBehavior implements Initialization {
                 if(levelNo>3){
                     message=levelHelper.getString(R.string.all_phases_finish);
                 }
+                web.loadUrl("file:///android_asset/win_html.html");
                 editor.putString(LevelHelper.getKEY(),new Gson().toJson(new Level(levelNo)));
                 editor.apply();
                 levelHelper.makeMessageBox(levelHelper.getString(R.string.info), message, 2, this);
@@ -113,33 +197,52 @@ public class FirstLevelBehavior implements Initialization {
                 editor.putString(LevelHelper.getKEY(),new Gson().toJson(getLevel()));
                 editor.apply();
                 levelHelper.startWinTone();
-                levelHelper.makeMessageBox(levelHelper.getString(R.string.info), levelHelper.getString(R.string.Your_answer_is_correct), 1, this);
+                message=levelHelper.getString(R.string.Your_answer_is_correct);
+                web.loadUrl("file:///android_asset/win_html.html");
+                levelHelper.makeMessageBox(levelHelper.getString(R.string.info), message, 1, this);
             }
         }else {
+
+
             if (getLevel().getChancesNo() > 1) {
                 getLevel().updatePoints(-LevelHelper.getPointValue()*2);
                 getLevel().updateChancesNo(-1);
                 levelHelper.startFailTone();
                 editor.putString(LevelHelper.getKEY(),new Gson().toJson(getLevel()));
                 editor.apply();
-                levelHelper.  makeMessageBox(levelHelper.getString(R.string.warning),levelHelper.getString(R.string.Your_answer_is_wrong),1,this);
+                message=levelHelper.getString(R.string.Your_answer_is_wrong);
+                web.loadUrl("file:///android_asset/lose_html.html");
+                levelHelper.  makeMessageBox(levelHelper.getString(R.string.warning),message,1,this);
             }else {
                 levelHelper.startGameOverTone();
                 editor.putString(LevelHelper.getKEY(),new Gson().toJson(new Level(getLevel().getLevelNo())));
                 editor.apply();
-                levelHelper. makeMessageBox(levelHelper.getString(R.string.warning),levelHelper.getString(R.string.game_over_label),2,this);
+                message=levelHelper.getString(R.string.game_over_label);
+                web.loadUrl("file:///android_asset/lose_html.html");
+                levelHelper. makeMessageBox(levelHelper.getString(R.string.warning),message,2,this);
             }
 
+        }
+
+
+
+
+
+
+
+    }
+
+    @Override
+    public void makeEffect() {
+        if(getCorrectButton()!=null){
+            setCardColorTran(getCorrectButton());
+            timer.start();
         }
     }
 
     private Level level;
 
-    public FirstLevelBehavior(AppCompatActivity activity, LevelHelper levelHelper, Level level) {
-        this.activity = activity;
-        this.levelHelper = levelHelper;
-        this.level = level;
-    }
+
     public void initHeader(){
        getActivity(). findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
            @Override
@@ -163,6 +266,18 @@ public class FirstLevelBehavior implements Initialization {
         }
         ((TextView)getActivity().findViewById(R.id.points)).setText(""+getLevel().getPoints());
         ((TextView)getActivity().findViewById(R.id.status)).setText(""+getLevel().getQuestionNoForHeader()+"/"+LevelHelper.getQuestionCount());
+        getActivity().findViewById(R.id.overlay).setVisibility(View.GONE);
+        WebView web = (WebView)getActivity(). findViewById(R.id.emot);
+        web.setVisibility(View.GONE);
+        loaded=false;
+        web.loadUrl("about:blank");
+        timer.cancel();
+        trans.resetTransition();
+        if(getCorrectButton()!=null){
+            getCorrectButton().setBackground(getLevelHelper().getResources().getDrawable(R.drawable.rectangle));
+        }
+   //     if(builder!=null)
+        mToolTipsManager.dismissAll();
     }
 
     @Override
@@ -182,6 +297,7 @@ public class FirstLevelBehavior implements Initialization {
             }
             opt_btn.setText(translation.getSynonym());
             if(translation.isCorrect()){
+                setCorrectButton(opt_btn);
                 setCorrectAnswer( translation.getSynonym());
                 imageView.setImageResource(getLevelHelper(). getResources().getIdentifier("img"+translation.getId(),"drawable",getLevelHelper(). getPackageName()));
 
@@ -205,6 +321,16 @@ public class FirstLevelBehavior implements Initialization {
         }
 
         activity.finish();
+
+    }
+    public void setCardColorTran(View view) {
+
+
+        if(Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            view.setBackgroundDrawable(trans);
+        }else {
+            view.setBackground(trans);
+        }
 
     }
 }

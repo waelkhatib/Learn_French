@@ -10,4 +10,5 @@ public interface Initialization {
     public void share();
     public void resumeMusic();
     public void checkAnswer(CharSequence answer);
+    public void  makeEffect();
 }

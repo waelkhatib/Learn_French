@@ -37,7 +37,7 @@ public class SecondLevelActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         for (int i = 0; i < viewIDs.length; i++) {
             if (v == findViewById(viewIDs[i])) {
-
+                behavior.makeEffect();
                 behavior.checkAnswer(((Button) v).getText());
                 break;
             }

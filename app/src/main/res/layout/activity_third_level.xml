@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rlt_layout"
+    style="@style/main_background"
+    tools:context=".view.ThirdLevelActivity"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    style="@style/main_background"
-    tools:context=".view.ThirdLevelActivity">
+    android:orientation="vertical">
     <include android:layout_width="match_parent"
         android:layout_height="wrap_content"
         layout="@layout/header"/>
@@ -89,3 +94,23 @@
         android:layout_height="wrap_content"
         />
 </LinearLayout>
+    <RelativeLayout
+        android:alpha="0.75"
+        android:id="@+id/overlay"
+        android:clickable="true"
+        android:visibility="gone"
+        android:background="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </RelativeLayout>
+    <WebView
+        android:id="@+id/emot"
+        android:visibility="gone"
+        android:layout_width="192dp"
+        android:layout_height="192dp"
+        android:layout_centerInParent="true"
+
+        />
+
+</RelativeLayout>

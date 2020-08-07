@@ -34,6 +34,7 @@ public class SecondLevelBehavior extends FirstLevelBehavior {
             }
             opt_btn.setText(translation.getSynonym_ar());
             if(translation.isCorrect()){
+                setCorrectButton(opt_btn);
                 setCorrectAnswer( translation.getSynonym_ar());
                 txtView.setText(translation.getSynonym());
 

@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
 import android.widget.ImageView;
 
 import com.waelalk.learnfrench.R;
@@ -22,6 +23,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class LevelHelper {
     private static final int request_code=32;
+    private boolean is_released;
 
     public static String getSharedPrefs() {
         return SHARED_PREFS;
@@ -123,10 +125,11 @@ public class LevelHelper {
     public void startWinTone() {
         actionPlayer=MediaPlayer.create(context,R.raw.correct);
         actionPlayer.start();
+        is_released=false;
         actionPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mp.release();
+                mp.release();is_released=true;
             }
         });
     }
@@ -134,30 +137,33 @@ public class LevelHelper {
     public void startFailTone() {
         actionPlayer = MediaPlayer.create(context, R.raw.wrong);
         actionPlayer.start();
+        is_released=false;
         actionPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mp.release();
+                mp.release();is_released=true;
             }
         });
     }
     public void startGameOverTone() {
         actionPlayer = MediaPlayer.create(context, R.raw.game_over);
         actionPlayer.start();
+        is_released=false;
         actionPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mp.release();
+                mp.release();is_released=true;
             }
         });
     }
     public void startVictoryTone() {
         actionPlayer = MediaPlayer.create(context, R.raw.victory);
         actionPlayer.start();
+        is_released=false;
         actionPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mp.release();
+                mp.release();is_released=true;
             }
         });
     }
@@ -172,15 +178,26 @@ public class LevelHelper {
     }
 
     public void makeMessageBox(String title, String message, final int action, final Initialization behaviorActivity){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                switch (action){
+                    case 1:getMainPlayer().start();behaviorActivity. initViews(); break;
+                    case 2:behaviorActivity. finish(); break;
+                    default:break;
+                }
+            }
+        },4000);
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);
         builder.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if(getActionPlayer().isPlaying()) {
+                        if(!is_released&&getActionPlayer().isPlaying()) {
                             getActionPlayer().stop();
                             getActionPlayer().release();
+                            is_released=true;
                         }
                         dialog.dismiss();
                         switch (action){
@@ -193,7 +210,7 @@ public class LevelHelper {
                     }
                 });
         builder.setCancelable(false);
-        builder.show();
+        builder.show();*/
     }
     public static void makeMessageBox( String message, Context context){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
