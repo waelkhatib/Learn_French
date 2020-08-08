@@ -11,12 +11,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -32,6 +35,7 @@ import com.tomergoldst.tooltips.ToolTip;
 import com.tomergoldst.tooltips.ToolTipsManager;
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.helper.LevelHelper;
+import com.waelalk.learnfrench.model.Balloon;
 import com.waelalk.learnfrench.model.Level;
 import com.waelalk.learnfrench.model.Translation;
 import com.waelalk.learnfrench.view.MainActivity;
@@ -39,19 +43,44 @@ import com.waelalk.learnfrench.view.MainActivity;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class FirstLevelBehavior implements Initialization {
+    private int[] mBalloonColors=new int[3];
     private ToolTipsManager mToolTipsManager;;
-    private String message="1";
+    private String message="";
     private boolean loaded=false;
+    private static final int MIN_ANIMATION_DELAY = 500;
+    private static final int MAX_ANIMATION_DELAY = 1500;
+    private static final int MIN_ANIMATION_DURATION = 1000;
+    private static final int MAX_ANIMATION_DURATION = 8000;
+    private static final int BALLOONS_PER_LEVEL = 10;
+    private int mNextColor, mScreenWidth, mScreenHeight;
+    private ViewGroup mContentView;;
+    private List<Balloon> mBalloons = new ArrayList<>();
 
     public FirstLevelBehavior(AppCompatActivity activity, LevelHelper levelHelper, Level level) {
         this.activity = activity;
         this.levelHelper = levelHelper;
         this.level = level;
+        mBalloonColors[0] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorBlue);
+        mBalloonColors[1] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorWhite);
+        mBalloonColors[2] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorAccent);
         mToolTipsManager=new ToolTipsManager();
-
+        mContentView = (ViewGroup)getActivity(). findViewById(R.id.rlt_layout);
+        ViewTreeObserver viewTreeObserver = mContentView.getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mContentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    mScreenHeight = mContentView.getHeight();
+                    mScreenWidth = mContentView.getWidth();
+                }
+            });
+        }
        this.trans = new TransitionDrawable(new Drawable[] {levelHelper.getResources().getDrawable(R.drawable.rectangle), levelHelper.getResources().getDrawable(R.drawable.blue_rectangle)});
         this.timer=new CountDownTimer(10000, 500) {
 
@@ -168,6 +197,7 @@ public class FirstLevelBehavior implements Initialization {
                     ToolTip.Builder builder = new ToolTip.Builder(levelHelper.getContext(), web, (RelativeLayout) getActivity().findViewById(R.id.rlt_layout), message, ToolTip.POSITION_ABOVE);
                     builder.setBackgroundColor(levelHelper.getResources().getColor(R.color.colorAccent));
                     mToolTipsManager.show(builder.build());
+                    web.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             }
         });
@@ -181,7 +211,8 @@ public class FirstLevelBehavior implements Initialization {
             if(getLevel().getQuestionNo()>LevelHelper.getQuestionCount()){
               levelHelper.startVictoryTone();
               getLevel().setLevelNo(getLevel().getLevelNo()+1);
-
+                BalloonLauncher balloonLauncher = new BalloonLauncher();
+                balloonLauncher.execute(1);
               int levelNo=getLevel().getLevelNo();
                 if(levelNo==2 || levelNo==3){
                     message=levelHelper.getString(R.string.go_to_next_level);
@@ -333,4 +364,73 @@ public class FirstLevelBehavior implements Initialization {
         }
 
     }
+
+    private class BalloonLauncher extends AsyncTask<Integer, Integer, Void> {
+
+        @Override
+        protected Void doInBackground(Integer... params) {
+
+            if (params.length != 1) {
+                throw new AssertionError(
+                        "Expected 1 param for current level");
+            }
+
+            int level = params[0];
+            int maxDelay = Math.max(MIN_ANIMATION_DELAY,
+                    (MAX_ANIMATION_DELAY - ((level - 1) * 500)));
+            int minDelay = maxDelay / 2;
+
+            int balloonsLaunched = 0;
+            while ( balloonsLaunched < BALLOONS_PER_LEVEL) {
+
+//              Get a random horizontal position for the next balloon
+                Random random = new Random();
+                int xPosition = random.nextInt(mScreenWidth - 200);
+                publishProgress(xPosition);
+                balloonsLaunched++;
+
+//              Wait a random number of milliseconds before looping
+                int delay = random.nextInt(minDelay) + minDelay;
+                try {
+                    Thread.sleep(delay);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            int xPosition = values[0];
+            launchBalloon(xPosition);
+        }
+
+    }
+
+    private void launchBalloon(int x) {
+
+        Balloon balloon = new Balloon(getLevelHelper().getContext(), mBalloonColors[mNextColor], 150);
+        mBalloons.add(balloon);
+
+        if (mNextColor + 1 == mBalloonColors.length) {
+            mNextColor = 0;
+        } else {
+            mNextColor++;
+        }
+
+//      Set balloon vertical position and dimensions, add to container
+        balloon.setX(x);
+        balloon.setY(mScreenHeight + balloon.getHeight());
+        mContentView.addView(balloon);
+
+//      Let 'er fly
+        int duration = Math.max(MIN_ANIMATION_DURATION, MAX_ANIMATION_DURATION -   1000);
+        balloon.releaseBalloon(mScreenHeight, duration);
+
+    }
+
 }
