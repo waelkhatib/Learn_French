@@ -27,7 +27,7 @@ public class FirstLevelActivity extends AppCompatActivity  implements View.OnCli
         LevelHelper levelHelper=new LevelHelper(this);
         Intent intent=getIntent();
         String content=intent.getStringExtra(LevelHelper.getKEY());
-        Level level=content!=null?new Gson().fromJson(content,Level.class) : new Level(1);
+        Level level=content!=null?LevelHelper.getGame().getLevel() : new Level(1);
         behavior=new FirstLevelBehavior(this,levelHelper, level);
         behavior.startMusic();
        behavior. initViews();

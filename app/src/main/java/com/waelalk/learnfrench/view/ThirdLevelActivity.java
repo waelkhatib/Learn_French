@@ -25,7 +25,7 @@ public class ThirdLevelActivity extends AppCompatActivity implements View.OnClic
         LevelHelper levelHelper=new LevelHelper(this);
         Intent intent=getIntent();
         String content=intent.getStringExtra(LevelHelper.getKEY());
-        Level level=content!=null?new Gson().fromJson(content,Level.class) : new Level(3);
+        Level level=content!=null?LevelHelper.getGame().getLevel() : new Level(3);
         behavior=new ThirdLevelBehavior(this,levelHelper,level);
         behavior.startMusic();
         behavior. initViews();

@@ -25,7 +25,7 @@ public class SecondLevelActivity extends AppCompatActivity implements View.OnCli
         LevelHelper levelHelper=new LevelHelper(this);
         Intent intent=getIntent();
         String content=intent.getStringExtra(LevelHelper.getKEY());
-        Level level=content!=null?new Gson().fromJson(content,Level.class) : new Level(2);
+        Level level=content!=null?LevelHelper.getGame().getLevel()  : new Level(2);
         behavior=new SecondLevelBehavior(this,levelHelper,level);
         behavior.startMusic();
 

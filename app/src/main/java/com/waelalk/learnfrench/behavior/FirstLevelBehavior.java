@@ -45,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class FirstLevelBehavior implements Initialization {
@@ -61,10 +62,10 @@ public class FirstLevelBehavior implements Initialization {
     private ViewGroup mContentView;;
     private List<Balloon> mBalloons = new ArrayList<>();
 
-    public FirstLevelBehavior(AppCompatActivity activity, LevelHelper levelHelper, Level level) {
+    public FirstLevelBehavior(AppCompatActivity activity, LevelHelper levelHelper,Level level) {
         this.activity = activity;
         this.levelHelper = levelHelper;
-        this.level = level;
+        LevelHelper.getGame().setLevel(level);
         mBalloonColors[0] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorBlue);
         mBalloonColors[1] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorWhite);
         mBalloonColors[2] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorAccent);
@@ -127,7 +128,7 @@ public class FirstLevelBehavior implements Initialization {
     private View correctButton=null;
 
     public Level getLevel() {
-        return level;
+        return LevelHelper.getGame().getLevel();
     }
 
     @Override
@@ -201,16 +202,17 @@ public class FirstLevelBehavior implements Initialization {
                 }
             }
         });
-        getLevel().updateQuestionNo(1);
+
         SharedPreferences.Editor editor = levelHelper.getSharedPreferences().edit();
         //String message="";
         if(answer.equals(correctAnswer)){
             getLevel().updatePoints(LevelHelper.getPointValue());
 
 
-            if(getLevel().getQuestionNo()>LevelHelper.getQuestionCount()){
+            if(getLevel().getQuestionNo()+1>LevelHelper.getQuestionCount()){
               levelHelper.startVictoryTone();
-              getLevel().setLevelNo(getLevel().getLevelNo()+1);
+              LevelHelper.getGame().setLevel(new Level(getLevel().getLevelNo()+1));
+              LevelHelper.getGame().updateGeneralLevelNo();
                 BalloonLauncher balloonLauncher = new BalloonLauncher();
                 balloonLauncher.execute(1);
               int levelNo=getLevel().getLevelNo();
@@ -221,11 +223,13 @@ public class FirstLevelBehavior implements Initialization {
                     message=levelHelper.getString(R.string.all_phases_finish);
                 }
                 web.loadUrl("file:///android_asset/win_html.html");
-                editor.putString(LevelHelper.getKEY(),new Gson().toJson(new Level(levelNo)));
+                Log.d("-@-",new Gson().toJson(LevelHelper.getGame()));
+                editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
                 editor.apply();
                 levelHelper.makeMessageBox(levelHelper.getString(R.string.info), message, 2, this);
             }else {
-                editor.putString(LevelHelper.getKEY(),new Gson().toJson(getLevel()));
+                getLevel().updateQuestionNo(1);
+                editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
                 editor.apply();
                 levelHelper.startWinTone();
                 message=levelHelper.getString(R.string.Your_answer_is_correct);
@@ -236,17 +240,19 @@ public class FirstLevelBehavior implements Initialization {
 
 
             if (getLevel().getChancesNo() > 1) {
+                getLevel().updateQuestionNo(1);
                 getLevel().updatePoints(-LevelHelper.getPointValue()*2);
                 getLevel().updateChancesNo(-1);
                 levelHelper.startFailTone();
-                editor.putString(LevelHelper.getKEY(),new Gson().toJson(getLevel()));
+                editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
                 editor.apply();
                 message=levelHelper.getString(R.string.Your_answer_is_wrong);
                 web.loadUrl("file:///android_asset/lose_html.html");
                 levelHelper.  makeMessageBox(levelHelper.getString(R.string.warning),message,1,this);
             }else {
                 levelHelper.startGameOverTone();
-                editor.putString(LevelHelper.getKEY(),new Gson().toJson(new Level(getLevel().getLevelNo())));
+                LevelHelper.getGame().setLevel(new Level(getLevel().getLevelNo()));
+                editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
                 editor.apply();
                 message=levelHelper.getString(R.string.game_over_label);
                 web.loadUrl("file:///android_asset/lose_html.html");
@@ -271,7 +277,7 @@ public class FirstLevelBehavior implements Initialization {
         }
     }
 
-    private Level level;
+
 
 
     public void initHeader(){
@@ -342,12 +348,12 @@ public class FirstLevelBehavior implements Initialization {
     public void finish() {
         if(activity.isTaskRoot()) {
             Intent intent=new Intent(getLevelHelper().getContext(),MainActivity.class);
-            intent.putExtra("levelNo",getLevel().getLevelNo());
+            intent.putExtra("levelNo",LevelHelper.getGame().getGeneralevelNo());
             activity.startActivity(intent);
         }
         else {
             Intent intent=new Intent(getLevelHelper().getContext(),MainActivity.class);
-            intent.putExtra("levelNo",getLevel().getLevelNo());
+            intent.putExtra("levelNo",LevelHelper.getGame().getGeneralevelNo());
             activity.setResult(Activity.RESULT_OK, intent);
         }
 
@@ -423,7 +429,7 @@ public class FirstLevelBehavior implements Initialization {
         }
 
 //      Set balloon vertical position and dimensions, add to container
-        balloon.setX(x);
+        balloon.setX(x*(Locale.getDefault().getLanguage().equals("ar")?-1:1));
         balloon.setY(mScreenHeight + balloon.getHeight());
         mContentView.addView(balloon);
 

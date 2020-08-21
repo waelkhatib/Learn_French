@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.google.gson.Gson;
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.helper.LevelHelper;
+import com.waelalk.learnfrench.model.Game;
 import com.waelalk.learnfrench.model.Level;
 
 public class SplashActivity extends AppCompatActivity {
@@ -26,10 +27,12 @@ public class SplashActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences(LevelHelper.getSharedPrefs(), MODE_PRIVATE);
                 String text = sharedPreferences.getString(LevelHelper.getKEY(), "");
                 if(text.equals("")) {
+                    LevelHelper.setGame(new Game());
                     Intent i = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(i);
                 }else {
-                    Level level=new Gson().fromJson(text,Level.class);
+                    LevelHelper.setGame(new Gson().fromJson(text,Game.class));
+                    Level level=LevelHelper.getGame().getLevel();
                     Intent i;
                     switch (level.getLevelNo()){
                         case 1:

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.behavior.Initialization;
+import com.waelalk.learnfrench.model.Game;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,16 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class LevelHelper {
     private static final int request_code=32;
+
+    public static Game getGame() {
+        return game;
+    }
+
+    public static void setGame(Game game) {
+        LevelHelper.game = game;
+    }
+
+    private static Game game;
     private boolean is_released;
 
     public static String getSharedPrefs() {
