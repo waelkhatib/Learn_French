@@ -18,7 +18,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        long start=System.currentTimeMillis();
         setContentView(R.layout.activity_main);
+        Log.d("time",""+(System.currentTimeMillis()-start)/1000.0);
         checkIntent(getIntent());
         mediaPlayer=MediaPlayer.create(this,R.raw.music);
         mediaPlayer.setLooping(true);
@@ -51,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         mediaPlayer.pause();
     }
 

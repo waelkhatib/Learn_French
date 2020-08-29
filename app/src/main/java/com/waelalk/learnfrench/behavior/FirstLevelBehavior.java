@@ -303,11 +303,11 @@ public class FirstLevelBehavior implements Initialization {
         }
         ((TextView)getActivity().findViewById(R.id.points)).setText(""+getLevel().getPoints());
         ((TextView)getActivity().findViewById(R.id.status)).setText(""+getLevel().getQuestionNoForHeader()+"/"+LevelHelper.getQuestionCount());
-        getActivity().findViewById(R.id.overlay).setVisibility(View.GONE);
+       getActivity().findViewById(R.id.overlay).setVisibility(View.GONE);
         WebView web = (WebView)getActivity(). findViewById(R.id.emot);
         web.setVisibility(View.GONE);
         loaded=false;
-        web.loadUrl("about:blank");
+       web.loadUrl("about:blank");
         timer.cancel();
         trans.resetTransition();
         if(getCorrectButton()!=null){

@@ -25,7 +25,13 @@ public class Level {
         this.chancesNo = 3;
         this.points = 0;
         this.questionNo = 1;
-        this.questions=LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2);
+        switch (levelNo){
+            case 1:this.questions=LevelHelper.getQuestionOfLevel1();break;
+            case 2:this.questions=LevelHelper.getQuestionOfLevel2();break;
+            case 3:this.questions=LevelHelper.getQuestionOfLevel3();break;
+            default:this.questions=LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,levelNo);break;
+        }
+
     }
 
 

@@ -24,6 +24,34 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class LevelHelper {
     private static final int request_code=32;
+    private static List<Integer> QuestionOfLevel1;
+    private static List<Integer> QuestionOfLevel2;
+
+    public static List<Integer> getQuestionOfLevel1() {
+        return QuestionOfLevel1;
+    }
+
+    public static void setQuestionOfLevel1(List<Integer> questionOfLevel1) {
+        QuestionOfLevel1 = questionOfLevel1;
+    }
+
+    public static List<Integer> getQuestionOfLevel2() {
+        return QuestionOfLevel2;
+    }
+
+    public static void setQuestionOfLevel2(List<Integer> questionOfLevel2) {
+        QuestionOfLevel2 = questionOfLevel2;
+    }
+
+    public static List<Integer> getQuestionOfLevel3() {
+        return QuestionOfLevel3;
+    }
+
+    public static void setQuestionOfLevel3(List<Integer> questionOfLevel3) {
+        QuestionOfLevel3 = questionOfLevel3;
+    }
+
+    private static List<Integer> QuestionOfLevel3;
 
     public static Game getGame() {
         return game;
@@ -55,7 +83,7 @@ public class LevelHelper {
         return QuestionCount;
     }
 
-    private static int QuestionCount=2;
+    private static int QuestionCount=50;
     private static int TotalPoint=100;
     public static int getPointValue(){
         return TotalPoint/QuestionCount;
@@ -105,16 +133,19 @@ public class LevelHelper {
         mainPlayer.start();
     }
 
+    private static final int BANK_QUESTION_NO =167 ;
+
     static {
-        for (int i = 1; i < 16; i++) {
+        for (int i = 1; i <= BANK_QUESTION_NO; i++) {
             list.add(new Integer(i));
         }
     }
-    public static List<Integer> generateRandomQuesions(int count){
+    public static List<Integer> generateRandomQuesions(int count,int level){
         List<Integer> listOfID = new ArrayList<Integer>();
-            Collections.shuffle(list);
+        List<Integer> temp=list.subList((BANK_QUESTION_NO/3)*(level-1),(BANK_QUESTION_NO/3)*(level)-1);
+            Collections.shuffle(temp);
             for (int i=0; i<count; i++) {
-                listOfID.add(list.get(i));
+                listOfID.add(temp.get(i));
             }
 
         return listOfID;

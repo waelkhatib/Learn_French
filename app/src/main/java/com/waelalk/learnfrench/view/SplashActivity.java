@@ -18,6 +18,14 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LevelHelper.setQuestionOfLevel1(LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,1));
+                LevelHelper.setQuestionOfLevel2(LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,2));
+                LevelHelper.setQuestionOfLevel3(LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,3));
+            }
+        }).start();
         new Handler().postDelayed(new Runnable() {
 
             @Override
