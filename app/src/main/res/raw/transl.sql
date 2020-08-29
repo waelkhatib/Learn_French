@@ -85,7 +85,7 @@ INSERT INTO Words (ID, synonym, synonym_ar) VALUES (78, 'des instruments de musi
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (79, 'un buffet', '»Ê›ÌÂ');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (80, 'le couteau', '«·”ﬂÌ‰');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (81, 'la fourchette', '«·‘Êﬂ…');
-INSERT INTO Words (ID, synonym, synonym_ar) VALUES (82, 'le verre', '«·ﬂÊ» - «·“Ã«Ã…');
+INSERT INTO Words (ID, synonym, synonym_ar) VALUES (82, 'le verre', '«·ﬂÊ»');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (83, 'la poivriËre', '«·›·›·');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (84, 'une assiette', '’Õ‰');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (85, 'la cuillËre', '«·„·⁄ﬁ…');
@@ -107,7 +107,7 @@ INSERT INTO Words (ID, synonym, synonym_ar) VALUES (100, 'l''ananas', '«·√‰«‰«”'
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (101, 'la prune', '«·ŒÊŒ');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (102, 'l''ail', '«·ÀÊ„');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (103, 'les oignons', '«·»’·');
-INSERT INTO Words (ID, synonym, synonym_ar) VALUES (104, 'les pommes de terre', '«·»«ÿ«ÿ«');
+INSERT INTO Words (ID, synonym, synonym_ar) VALUES (104, 'les pommes de terre', '«·»ÿ«ÿ«');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (105, 'les feves', '«·›Ê·');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (106, 'l''ours', '«·œ»');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (107, 'serpent', 'À⁄»«‰');
@@ -146,7 +146,7 @@ INSERT INTO Words (ID, synonym, synonym_ar) VALUES (139, 'le dos', '«·ŸÂ—');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (140, 'la barbe', '·ÕÌ…');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (141, 'un chapeau', 'ﬁ»⁄…');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (142, 'le doigt', '«·√’»⁄');
-INSERT INTO Words (ID, synonym, synonym_ar) VALUES (143, 'les cheveux [m]', '«·‘⁄—');
+INSERT INTO Words (ID, synonym, synonym_ar) VALUES (143, 'les cheveux', '«·‘⁄—');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (144, 'la voiture', '«·”Ì«—…');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (145, 'le camion', '«·‘«Õ‰…');
 INSERT INTO Words (ID, synonym, synonym_ar) VALUES (146, 'le mÈtro', '«·„ —Ê');

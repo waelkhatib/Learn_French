@@ -8,6 +8,7 @@ public interface Initialization {
     public void startMusic();
     public void stoptMusic();
     public void share();
+    public void initGraphic();
     public void resumeMusic();
     public void checkAnswer(CharSequence answer);
     public void  makeEffect();

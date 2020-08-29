@@ -20,7 +20,7 @@ public class ThirdLevelBehavior extends FirstLevelBehavior {
         initHeader();
         ImageView imageView = (ImageView) getActivity().findViewById(R.id.imgView);
         ((EditText)getActivity(). findViewById(R.id.input_txt)).setText("");
-        Translation translation = getLevelHelper().getDbHelper().getSingleTranslate(getLevel().getQuestions().get(getLevel().getQuestionNo() - 1));
+        Translation translation = LevelHelper.getDbHelper().getSingleTranslate(getLevel().getQuestions().get(getLevel().getQuestionNo() - 1));
         if (translation.isCorrect()) {
                 setCorrectAnswer(translation.getSynonym());
                 imageView.setImageResource(getLevelHelper().getResources().getIdentifier("img" + translation.getId(), "drawable", getLevelHelper().getPackageName()));

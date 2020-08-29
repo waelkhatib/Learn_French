@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,9 +19,11 @@ import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -61,7 +64,7 @@ public class FirstLevelBehavior implements Initialization {
     private int mNextColor, mScreenWidth, mScreenHeight;
     private ViewGroup mContentView;;
     private List<Balloon> mBalloons = new ArrayList<>();
-
+    private WebView web=null;
     public FirstLevelBehavior(AppCompatActivity activity, LevelHelper levelHelper,Level level) {
         this.activity = activity;
         this.levelHelper = levelHelper;
@@ -171,10 +174,35 @@ public class FirstLevelBehavior implements Initialization {
     }
 
     @Override
+    public void initGraphic() {
+        if(getActivity().findViewById(R.id.emot)==null){
+            Log.d("kados","-----");
+            long start=System.currentTimeMillis();
+            WebView webV=LevelHelper.getSharedWebView();
+            Log.d("time2",""+(System.currentTimeMillis()-start)/1000.0);
+            float dip = 192f;
+            Resources r =getLevelHelper(). getResources();
+            float px = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    dip,
+                    r.getDisplayMetrics()
+            );
+            RelativeLayout.LayoutParams layoutParams= new RelativeLayout.LayoutParams((int)px,(int)px);
+            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
+            ViewGroup relativeLayout=(ViewGroup)getActivity(). findViewById(R.id.rlt_layout);
+            if(webV.getParent() != null) {
+                ((ViewGroup)webV.getParent()).removeView(webV); // <- fix
+            }
+            relativeLayout.addView(webV, layoutParams);
+
+        }
+    }
+
+    @Override
     public void checkAnswer(CharSequence answer) {
         levelHelper.getMainPlayer().pause();
         getActivity().findViewById(R.id.overlay).setVisibility(View.VISIBLE);
-        final WebView web = (WebView)getActivity(). findViewById(R.id.emot);
+        web = (WebView)getActivity(). findViewById(R.id.emot);
         web.setBackgroundColor(Color.TRANSPARENT); //for gif without background
         loaded=true;
         web.setWebViewClient(new WebViewClient(){
@@ -305,9 +333,11 @@ public class FirstLevelBehavior implements Initialization {
         ((TextView)getActivity().findViewById(R.id.status)).setText(""+getLevel().getQuestionNoForHeader()+"/"+LevelHelper.getQuestionCount());
        getActivity().findViewById(R.id.overlay).setVisibility(View.GONE);
         WebView web = (WebView)getActivity(). findViewById(R.id.emot);
-        web.setVisibility(View.GONE);
-        loaded=false;
-       web.loadUrl("about:blank");
+        if(web!=null) {
+            web.setVisibility(View.GONE);
+            loaded = false;
+            web.loadUrl("about:blank");
+        }
         timer.cancel();
         trans.resetTransition();
         if(getCorrectButton()!=null){
@@ -320,7 +350,7 @@ public class FirstLevelBehavior implements Initialization {
     @Override
     public void initViews() {
         initHeader();
-        List<Translation> translations=getLevelHelper().getDbHelper().getSpecificTranslations(LevelHelper.generateRandomOptions(4 ,getLevel().getQuestions().get(getLevel().getQuestionNo()-1)));
+        List<Translation> translations=LevelHelper.getDbHelper().getSpecificTranslations(LevelHelper.generateRandomOptions(4 ,getLevel().getQuestions().get(getLevel().getQuestionNo()-1)));
 
         ImageView imageView=(ImageView)getActivity().findViewById(R.id.imgView);
         Button opt_btn=null;

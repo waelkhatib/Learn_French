@@ -104,13 +104,5 @@
         android:layout_height="match_parent">
 
     </RelativeLayout>
-    <WebView
-        android:id="@+id/emot"
-        android:visibility="gone"
-        android:layout_width="192dp"
-        android:layout_height="192dp"
-        android:layout_centerInParent="true"
-
-        />
 
 </RelativeLayout>

@@ -52,6 +52,7 @@ public class SecondLevelActivity extends AppCompatActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         behavior.resumeMusic();
+        behavior.initGraphic();
     }
     @Override
     protected void onPause() {

@@ -2,6 +2,7 @@ package com.waelalk.learnfrench.model;
 
 import com.waelalk.learnfrench.helper.LevelHelper;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Level {
@@ -31,6 +32,7 @@ public class Level {
             case 3:this.questions=LevelHelper.getQuestionOfLevel3();break;
             default:this.questions=LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,levelNo);break;
         }
+        Collections.shuffle(this.questions);
 
     }
 

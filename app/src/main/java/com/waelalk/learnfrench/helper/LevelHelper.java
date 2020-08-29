@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
+import android.webkit.WebView;
 import android.widget.ImageView;
 
 import com.waelalk.learnfrench.R;
@@ -26,6 +27,16 @@ public class LevelHelper {
     private static final int request_code=32;
     private static List<Integer> QuestionOfLevel1;
     private static List<Integer> QuestionOfLevel2;
+
+    public static WebView getSharedWebView() {
+        return sharedWebView;
+    }
+
+    public static void setSharedWebView(WebView sharedWebView) {
+        LevelHelper.sharedWebView = sharedWebView;
+    }
+
+    private static WebView sharedWebView;
 
     public static List<Integer> getQuestionOfLevel1() {
         return QuestionOfLevel1;
@@ -101,11 +112,15 @@ public class LevelHelper {
 
     private Context context;
 
-    public DBHelper getDbHelper() {
+    public static DBHelper getDbHelper() {
         return dbHelper;
     }
 
-    private DBHelper dbHelper;
+    private static DBHelper dbHelper;
+
+    public static void setDbHelper(DBHelper dbHelper) {
+        LevelHelper.dbHelper = dbHelper;
+    }
 
     public MediaPlayer getMainPlayer() {
         return mainPlayer;
@@ -115,7 +130,7 @@ public class LevelHelper {
 
     public LevelHelper(Context context) {
         this.context = context;
-        dbHelper=new DBHelper(context);
+
     }
 
     public MediaPlayer getActionPlayer() {

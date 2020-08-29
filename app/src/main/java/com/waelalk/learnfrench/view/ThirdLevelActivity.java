@@ -65,6 +65,7 @@ public class ThirdLevelActivity extends AppCompatActivity implements View.OnClic
     protected void onResume() {
         super.onResume();
         behavior.resumeMusic();
+        behavior.initGraphic();
     }
     @Override
     public void onBackPressed() {

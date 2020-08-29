@@ -20,7 +20,7 @@ public class SecondLevelBehavior extends FirstLevelBehavior {
     @Override
     public void initViews() {
         initHeader();
-        List<Translation> translations=getLevelHelper().getDbHelper().getSpecificTranslations(LevelHelper.generateRandomOptions(4 ,getLevel().getQuestions().get(getLevel().getQuestionNo()-1)));
+        List<Translation> translations=LevelHelper.getDbHelper().getSpecificTranslations(LevelHelper.generateRandomOptions(4 ,getLevel().getQuestions().get(getLevel().getQuestionNo()-1)));
         TextView txtView =(TextView)getActivity(). findViewById(R.id.txtView);
 
         Button opt_btn=null;
