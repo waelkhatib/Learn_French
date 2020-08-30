@@ -2,10 +2,8 @@ package com.waelalk.learnfrench.model;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
-import android.widget.ImageView;
 
 
 import com.waelalk.learnfrench.R;

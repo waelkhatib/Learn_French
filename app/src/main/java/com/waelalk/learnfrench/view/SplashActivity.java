@@ -3,19 +3,17 @@ package com.waelalk.learnfrench.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.waelalk.learnfrench.R;
@@ -25,11 +23,38 @@ import com.waelalk.learnfrench.model.Game;
 import com.waelalk.learnfrench.model.Level;
 
 public class SplashActivity extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 3000;
+    private static int SPLASH_TIME_OUT = 500;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        final Handler handler = new Handler();
+        final Runnable uiRunnable=new Runnable() {
+            @Override
+            public void run() {
+                WebView webV=new WebView(getApplicationContext() );
+                webV.setVisibility(View.GONE);
+                webV.loadUrl("about:blank");
+                WebSettings settings =webV. getSettings();
+                settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
+                settings.setJavaScriptEnabled(true);
+                settings.setLoadWithOverviewMode(true);
+                settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+                settings.setDomStorageEnabled(true);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    // chromium, enable hardware acceleration
+                    webV.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+                } else {
+                    // older android version, disable hardware acceleration
+                    webV.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                }
+                webV.setId(R.id.emot);
+
+                LevelHelper.setSharedWebView(webV);
+
+
+            }
+        };
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -37,10 +62,12 @@ public class SplashActivity extends AppCompatActivity {
                 LevelHelper.setQuestionOfLevel1(LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,1));
                 LevelHelper.setQuestionOfLevel2(LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,2));
                 LevelHelper.setQuestionOfLevel3(LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,3));
+                handler.postDelayed(uiRunnable,150);
 
             }
         }).start();
-        new Handler().postDelayed(new Runnable() {
+
+        handler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
@@ -96,31 +123,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                WebView webV=new WebView(getApplicationContext() );
-                webV.setVisibility(View.GONE);
-                webV.loadUrl("about:blank");
-                WebSettings settings =webV. getSettings();
-                settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-                settings.setJavaScriptEnabled(true);
-                settings.setLoadWithOverviewMode(true);
-                settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-                settings.setDomStorageEnabled(true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    // chromium, enable hardware acceleration
-                    webV.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-                } else {
-                    // older android version, disable hardware acceleration
-                    webV.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                }
-                webV.setId(R.id.emot);
-
-                LevelHelper.setSharedWebView(webV);
 
 
-            }
-        });
     }
 }

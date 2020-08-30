@@ -1,7 +1,5 @@
 package com.waelalk.learnfrench.behavior;
 
-import com.waelalk.learnfrench.model.Level;
-
 public interface Initialization {
     public void initViews();
     public void finish();

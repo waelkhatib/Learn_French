@@ -19,7 +19,7 @@
         <activity android:name=".view.MainActivity" />
         <activity android:name=".view.FirstLevelActivity" />
         <activity android:name=".view.SecondLevelActivity" />
-        <activity android:name=".view.ThirdLevelActivity"></activity>
+        <activity android:name=".view.ThirdLevelActivity"/>
     </application>
 
 </manifest>

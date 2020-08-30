@@ -4,77 +4,81 @@
     android:id="@+id/rlt_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/main_background"
+
     tools:context=".view.FirstLevelActivity"
     xmlns:tools="http://schemas.android.com/tools">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
  <include android:layout_width="match_parent"
      android:layout_height="wrap_content"
+     android:id="@+id/header"
      layout="@layout/header"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:layout_marginTop="8dp"
-        android:paddingTop="8dp"
-        android:background="@drawable/psttern"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="16dp">
+<ImageView
+    android:id="@+id/greenBg"
+    android:layout_marginBottom="24dp"
+    android:layout_below="@id/header"
+    android:background="@drawable/psttern1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
         <ImageView
+            android:layout_marginTop="16dp"
             android:id="@+id/imgView"
             android:src="@drawable/img5"
-            android:layout_width="192dp"
-            android:layout_height="192dp"
-            android:layout_marginBottom="16dp"
+            android:layout_below="@id/header"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             />
         <TextView
             android:textColor="@android:color/white"
             android:textAllCaps="false"
-
+            android:layout_below="@id/imgView"
+            android:layout_centerHorizontal="true"
             android:textSize="20dp"
             android:id="@+id/lbl"
+
             android:text="@string/what_does_the_image_represent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+
 
     <Button
+        android:layout_below="@id/greenBg"
         android:id="@+id/option1"
         android:text="ddfdsds"
         style="@style/buttonStyle"
         android:onClick="onClick"/>
     <Button
+        android:layout_below="@id/option1"
         android:id="@+id/option2"
         android:text="ddfdsds"
         style="@style/buttonStyle"
         android:onClick="onClick"/>
     <Button
+        android:layout_below="@id/option2"
         android:id="@+id/option3"
         android:text="ddfdsds"
         style="@style/buttonStyle"
         android:onClick="onClick"/>
     <Button
+        android:layout_below="@id/option3"
         android:id="@+id/option4"
         android:text="ddfdsds"
         style="@style/buttonStyle"
         android:onClick="onClick"/>
-</LinearLayout>
-<RelativeLayout
-android:alpha="0.75"
-android:clickable="true"
-android:id="@+id/overlay"
-android:visibility="gone"
-android:background="@android:color/black"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
-
 </RelativeLayout>
 
-
+<ViewStub
+    android:id="@+id/sub_import"
+    android:inflatedId="@+id/content_import"
+    android:layout="@layout/overlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
 
     </RelativeLayout>

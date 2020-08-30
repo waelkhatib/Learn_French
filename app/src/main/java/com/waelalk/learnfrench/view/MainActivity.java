@@ -1,6 +1,5 @@
 package com.waelalk.learnfrench.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.waelalk.learnfrench.R;
-import com.waelalk.learnfrench.helper.DBHelper;
 import com.waelalk.learnfrench.helper.LevelHelper;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {

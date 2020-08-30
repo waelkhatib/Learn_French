@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.gson.Gson;
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.behavior.Initialization;
 import com.waelalk.learnfrench.behavior.SecondLevelBehavior;

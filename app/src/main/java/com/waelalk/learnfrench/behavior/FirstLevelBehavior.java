@@ -1,14 +1,12 @@
 package com.waelalk.learnfrench.behavior;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
@@ -22,14 +20,12 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.ViewTreeObserver;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,6 +52,7 @@ public class FirstLevelBehavior implements Initialization {
     private ToolTipsManager mToolTipsManager;;
     private String message="";
     private boolean loaded=false;
+    private ViewStub overlay;
     private static final int MIN_ANIMATION_DELAY = 500;
     private static final int MAX_ANIMATION_DELAY = 1500;
     private static final int MIN_ANIMATION_DURATION = 1000;
@@ -201,7 +198,11 @@ public class FirstLevelBehavior implements Initialization {
     @Override
     public void checkAnswer(CharSequence answer) {
         levelHelper.getMainPlayer().pause();
-        getActivity().findViewById(R.id.overlay).setVisibility(View.VISIBLE);
+        if(overlay==null){
+            overlay=(ViewStub)getActivity().findViewById(R.id.sub_import);
+            overlay.inflate();
+        }
+        overlay.setVisibility(View.VISIBLE);
         web = (WebView)getActivity(). findViewById(R.id.emot);
         web.setBackgroundColor(Color.TRANSPARENT); //for gif without background
         loaded=true;
@@ -318,26 +319,30 @@ public class FirstLevelBehavior implements Initialization {
         switch (getLevel().getChancesNo()){
             case 2:
                 getActivity().findViewById(R.id.chnc3).setVisibility(View.GONE);
-                getActivity().findViewById(R.id.spc3).setVisibility(View.GONE);
+
                 break;
             case 1:
                 getActivity().findViewById(R.id.chnc3).setVisibility(View.GONE);
-                getActivity().findViewById(R.id.spc3).setVisibility(View.GONE);
+
                 getActivity().findViewById(R.id.chnc2).setVisibility(View.GONE);
-                getActivity().findViewById(R.id.spc2).setVisibility(View.GONE);
+
 
                 break;
             default:break;
         }
         ((TextView)getActivity().findViewById(R.id.points)).setText(""+getLevel().getPoints());
         ((TextView)getActivity().findViewById(R.id.status)).setText(""+getLevel().getQuestionNoForHeader()+"/"+LevelHelper.getQuestionCount());
-       getActivity().findViewById(R.id.overlay).setVisibility(View.GONE);
-        WebView web = (WebView)getActivity(). findViewById(R.id.emot);
-        if(web!=null) {
-            web.setVisibility(View.GONE);
-            loaded = false;
-            web.loadUrl("about:blank");
+        if(overlay!=null){
+            overlay.setVisibility(View.GONE);
         }
+       //getActivity().findViewById(R.id.overlay).setVisibility(View.GONE);
+        WebView web = (WebView)getActivity(). findViewById(R.id.emot);
+           if(web!=null) {
+               Log.d("hiddemc", "--");
+               web.loadUrl("about:blank");
+               web.setVisibility(View.GONE);
+               loaded = false;
+           }
         timer.cancel();
         trans.resetTransition();
         if(getCorrectButton()!=null){
@@ -376,6 +381,8 @@ public class FirstLevelBehavior implements Initialization {
 
     @Override
     public void finish() {
+        if(web!=null)
+          web.setVisibility(View.GONE);
         if(activity.isTaskRoot()) {
             Intent intent=new Intent(getLevelHelper().getContext(),MainActivity.class);
             intent.putExtra("levelNo",LevelHelper.getGame().getGeneralevelNo());

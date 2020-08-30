@@ -94,7 +94,7 @@ public class LevelHelper {
         return QuestionCount;
     }
 
-    private static int QuestionCount=50;
+    private static int QuestionCount=3;
     private static int TotalPoint=100;
     public static int getPointValue(){
         return TotalPoint/QuestionCount;

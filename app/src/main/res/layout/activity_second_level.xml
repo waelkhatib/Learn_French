@@ -6,28 +6,32 @@
     style="@style/main_background"
     tools:context=".view.SecondLevelActivity"
     xmlns:tools="http://schemas.android.com/tools">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        android:orientation="vertical">
-    <include android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/header"/>
-    <LinearLayout
         android:layout_width="match_parent"
-        android:background="@drawable/psttern"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_height="256dp"
-        android:layout_marginBottom="16dp">
+        android:layout_height="match_parent">
+        <include android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/header"
+            layout="@layout/header"/>
+        <LinearLayout
+            android:id="@+id/greenBg"
+            android:layout_marginBottom="24dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_below="@id/header"
+            android:background="@drawable/psttern1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
         <TextView
             android:textColor="@android:color/white"
             android:textAllCaps="false"
+
             android:id="@+id/lbl"
             android:textSize="20dp"
+            android:layout_centerInParent="true"
             android:text="@string/what_is_the_arabic_translation_of"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -35,44 +39,47 @@
             android:textColor="@android:color/white"
             android:textAllCaps="false"
             android:textStyle="bold"
+            android:layout_above="@id/lbl"
+
+
             android:textSize="20dp"
             android:text="Livre"
             android:id="@+id/txtView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
-    <Button
-        android:id="@+id/option1"
-        android:text="ddfdsds"
-        style="@style/buttonStyle"
-        android:onClick="onClick"/>
-    <Button
-        android:id="@+id/option2"
-        android:text="ddfdsds"
-        style="@style/buttonStyle"
-        android:onClick="onClick"/>
-    <Button
-        android:id="@+id/option3"
-        android:text="ddfdsds"
-        style="@style/buttonStyle"
-        android:onClick="onClick"/>
-    <Button
-        android:id="@+id/option4"
-        android:text="ddfdsds"
-        style="@style/buttonStyle"
-        android:onClick="onClick"/>
-
-</LinearLayout>
-    <RelativeLayout
-        android:alpha="0.75"
-        android:clickable="true"
-        android:id="@+id/overlay"
-        android:visibility="gone"
-        android:background="@android:color/black"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        </LinearLayout>
+        <Button
+            android:layout_below="@id/greenBg"
+            android:id="@+id/option1"
+            android:text="ddfdsds"
+            style="@style/buttonStyle"
+            android:onClick="onClick"/>
+        <Button
+            android:layout_below="@id/option1"
+            android:id="@+id/option2"
+            android:text="ddfdsds"
+            style="@style/buttonStyle"
+            android:onClick="onClick"/>
+        <Button
+            android:layout_below="@id/option2"
+            android:id="@+id/option3"
+            android:text="ddfdsds"
+            style="@style/buttonStyle"
+            android:onClick="onClick"/>
+        <Button
+            android:layout_below="@id/option3"
+            android:id="@+id/option4"
+            android:text="ddfdsds"
+            style="@style/buttonStyle"
+            android:onClick="onClick"/>
 
     </RelativeLayout>
 
+    <ViewStub
+        android:id="@+id/sub_import"
+        android:inflatedId="@+id/content_import"
+        android:layout="@layout/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

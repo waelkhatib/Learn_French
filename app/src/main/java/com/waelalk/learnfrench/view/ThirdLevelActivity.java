@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.behavior.Initialization;
 import com.waelalk.learnfrench.behavior.ThirdLevelBehavior;
@@ -36,12 +35,14 @@ public class ThirdLevelActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         EditText input_text=(EditText)findViewById(R.id.input_txt);
         if(v==findViewById(R.id.play)){
+            behavior.stoptMusic();
             MediaPlayer mPlayer = MediaPlayer.create(this, getResources().getIdentifier("w"+((ThirdLevelBehavior)behavior).getMediaID(),"raw",getPackageName()));
             mPlayer.start();
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     mp.release();
+                    behavior.resumeMusic();
                 }
             });
         }else
