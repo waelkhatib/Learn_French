@@ -2,13 +2,13 @@ package com.waelalk.learnfrench.view;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-//import com.bumptech.glide.Glide;
+import com.bumptech.glide.Glide;
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.helper.LevelHelper;
 
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         long start=System.currentTimeMillis();
         setContentView(R.layout.activity_main);
-      //  ImageView imageView = (ImageView) findViewById(R.id.imageView);
+       // ImageView imageView = (ImageView) findViewById(R.id.imageView);
         //Glide.with(this).asGif().load(R.drawable.win).into(imageView);
         Log.d("time",""+(System.currentTimeMillis()-start)/1000.0);
         checkIntent(getIntent());

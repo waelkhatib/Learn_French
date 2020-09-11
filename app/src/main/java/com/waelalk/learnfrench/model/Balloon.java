@@ -13,7 +13,7 @@ import com.waelalk.learnfrench.helper.PixelHelper;
  * Created by Rohan on 21-May-17.
  */
 
-public class Balloon extends android.support.v7.widget.AppCompatImageView implements Animator.AnimatorListener, ValueAnimator.AnimatorUpdateListener {
+public class Balloon extends androidx.appcompat.widget.AppCompatImageView implements Animator.AnimatorListener, ValueAnimator.AnimatorUpdateListener {
 
     private ValueAnimator mAnimator;
 

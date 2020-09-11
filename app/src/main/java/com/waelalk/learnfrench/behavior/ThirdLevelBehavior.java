@@ -3,7 +3,7 @@ package com.waelalk.learnfrench.behavior;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.ImageView;
 
