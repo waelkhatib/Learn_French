@@ -11,6 +11,7 @@ public class Game {
 
     public void updateGeneralLevelNo() {
         this.generalLevelNo = Math.max(generalLevelNo,getLevel().getLevelNo());
+        this.generalLevelNo = Math.min(generalLevelNo,3);
     }
 
     public Level getLevel() {

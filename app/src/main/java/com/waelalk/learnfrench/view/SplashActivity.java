@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -28,6 +30,10 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
         final Handler handler = new Handler();
         final Runnable uiRunnable=new Runnable() {
             @Override
@@ -75,7 +81,7 @@ public class SplashActivity extends AppCompatActivity {
                 // Start your app main activity
                 SharedPreferences sharedPreferences = getSharedPreferences(LevelHelper.getSharedPrefs(), MODE_PRIVATE);
                 String text = sharedPreferences.getString(LevelHelper.getKEY(), "");
-                Log.d("kad",text);
+                Log.d("kad","--"+getResources().getDisplayMetrics().density);
                 if(text.equals("")) {
                     LevelHelper.setGame(new Game());
                     Intent i = new Intent(SplashActivity.this, MainActivity.class);

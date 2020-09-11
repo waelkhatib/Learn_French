@@ -8,6 +8,8 @@ public interface Initialization {
     public void share();
     public void initGraphic();
     public void resumeMusic();
+    public void setStatusBarTransparent();
     public void checkAnswer(CharSequence answer);
     public void  makeEffect();
+    public String SaveBackground();
 }

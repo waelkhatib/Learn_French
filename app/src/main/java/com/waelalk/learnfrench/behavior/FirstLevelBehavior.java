@@ -1,8 +1,10 @@
 package com.waelalk.learnfrench.behavior;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,14 +16,18 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -40,7 +46,9 @@ import com.waelalk.learnfrench.model.Translation;
 import com.waelalk.learnfrench.view.MainActivity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +60,7 @@ public class FirstLevelBehavior implements Initialization {
     private ToolTipsManager mToolTipsManager;;
     private String message="";
     private boolean loaded=false;
+    private boolean stableStatus=false;
     private ViewStub overlay;
     private static final int MIN_ANIMATION_DELAY = 500;
     private static final int MAX_ANIMATION_DELAY = 1500;
@@ -148,26 +157,13 @@ public class FirstLevelBehavior implements Initialization {
 
     @Override
     public void share() {
-        Bitmap bitmap= BitmapFactory.decodeResource(getLevelHelper(). getResources(),getLevelHelper(). getResources().getIdentifier("img"+ getLevel().getQuestions().get(getLevel().getQuestionNo()-1),"drawable",getLevelHelper(). getPackageName()));
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/LatestShare.jpg";
-        OutputStream out = null;
-        File file=new File(path);
-        try {
-            out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        path=file.getPath();
-        Uri bmpUri = Uri.parse("file://"+path);
+        String path=SaveBackground();
+        Uri bmpUri = Uri.parse(path);
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         sharingIntent.setType("image/png");
         sharingIntent.putExtra(Intent.EXTRA_STREAM,  bmpUri);
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, ((TextView)activity.findViewById(R.id.lbl)).getText());
-       activity. startActivity(Intent.createChooser(sharingIntent, "Share Image Using"));
+       activity. startActivity(Intent.createChooser(sharingIntent, "Share level"));
     }
 
     @Override
@@ -239,13 +235,14 @@ public class FirstLevelBehavior implements Initialization {
 
 
             if(getLevel().getQuestionNo()+1>LevelHelper.getQuestionCount()){
+                stableStatus=true;
               levelHelper.startVictoryTone();
-              LevelHelper.getGame().setLevel(new Level(getLevel().getLevelNo()+1));
-              LevelHelper.getGame().updateGeneralLevelNo();
                 BalloonLauncher balloonLauncher = new BalloonLauncher();
                 balloonLauncher.execute(1);
               int levelNo=getLevel().getLevelNo();
-                if(levelNo==2 || levelNo==3){
+                if(levelNo==1 || levelNo==2){
+                    LevelHelper.getGame().setLevel(new Level(getLevel().getLevelNo()+1));
+                    LevelHelper.getGame().updateGeneralLevelNo();
                     message=levelHelper.getString(R.string.go_to_next_level);
                 }else
                 if(levelNo>3){
@@ -279,6 +276,7 @@ public class FirstLevelBehavior implements Initialization {
                 web.loadUrl("file:///android_asset/lose_html.html");
                 levelHelper.  makeMessageBox(levelHelper.getString(R.string.warning),message,1,this);
             }else {
+                stableStatus=true;
                 levelHelper.startGameOverTone();
                 LevelHelper.getGame().setLevel(new Level(getLevel().getLevelNo()));
                 editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
@@ -309,11 +307,28 @@ public class FirstLevelBehavior implements Initialization {
 
 
 
-    public void initHeader(){
+    public void initHeader(final Initialization initialization){
        getActivity(). findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               share();
+               if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                   // only for gingerbread and newer versions
+
+                   if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                       // Permission is not granted
+                       if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                               Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                           // No explanation needed; request the permission
+                           ActivityCompat.requestPermissions(getActivity(),
+                                   new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                  LevelHelper. MY_PERMISSIONS_WRITE);
+                       }else
+                          initialization. share();
+                   }else
+                       initialization.share();
+
+               }else
+                   initialization.share();
            }
        });
         switch (getLevel().getChancesNo()){
@@ -354,7 +369,7 @@ public class FirstLevelBehavior implements Initialization {
 
     @Override
     public void initViews() {
-        initHeader();
+        initHeader(this);
         List<Translation> translations=LevelHelper.getDbHelper().getSpecificTranslations(LevelHelper.generateRandomOptions(4 ,getLevel().getQuestions().get(getLevel().getQuestionNo()-1)));
 
         ImageView imageView=(ImageView)getActivity().findViewById(R.id.imgView);
@@ -381,6 +396,13 @@ public class FirstLevelBehavior implements Initialization {
 
     @Override
     public void finish() {
+        if(!stableStatus)
+        {
+            SharedPreferences.Editor editor = levelHelper.getSharedPreferences().edit();
+            LevelHelper.getGame().setLevel(new Level(getLevel().getLevelNo()));
+            editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
+            editor.apply();
+        }
         if(web!=null)
           web.setVisibility(View.GONE);
         if(activity.isTaskRoot()) {
@@ -475,5 +497,66 @@ public class FirstLevelBehavior implements Initialization {
         balloon.releaseBalloon(mScreenHeight, duration);
 
     }
+    public void setStatusBarTransparent() {
+        Window window =getActivity(). getWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(0x00000000);  // transparent
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+            window.addFlags(flags);
+        }
+    }
+    public String SaveBackground()
+    {
+        Bitmap bitmap;
+        RelativeLayout panelResult = (RelativeLayout)getActivity(). findViewById(R.id.rlt_layout);
+        panelResult.invalidate();
+        panelResult.setDrawingCacheEnabled(true);
+        panelResult.buildDrawingCache();
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+     getActivity().   getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int i = displaymetrics.heightPixels;
+        int j = displaymetrics.widthPixels;
+        bitmap = Bitmap.createScaledBitmap(Bitmap.createBitmap(panelResult.getDrawingCache()), j, i, true);
+        panelResult.setDrawingCacheEnabled(false);
+        String s = null;
+        File file;
+        boolean flag;
+        StringBuilder sb = new StringBuilder();
+        sb.append(Environment.getExternalStorageDirectory().toString()).append(File.separator).append(getLevelHelper(). getString(R.string.app_name));
+        file = new File(sb.toString());
+        flag = file.isDirectory();
+        s = null;
+        if (flag)
+        {
+        }
+        file.mkdir();
+        FileOutputStream fileoutputstream1 = null;
+        s = (new StringBuilder(String.valueOf("guess"))).append("_sound_").append(System.currentTimeMillis()).append(".png").toString();
+        try {
+            fileoutputstream1 = new FileOutputStream(new File(file, s));
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        FileOutputStream fileoutputstream = fileoutputstream1;
 
+        StringBuilder stringbuilder1;
+        bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, fileoutputstream);
+        stringbuilder1 = new StringBuilder();
+        stringbuilder1.append(sb.toString()).append(File.separator).append(s);
+
+        try {
+            fileoutputstream.flush();
+            fileoutputstream.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return ""+stringbuilder1;
+
+    }
 }

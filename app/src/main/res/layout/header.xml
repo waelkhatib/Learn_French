@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-
+android:gravity="center_vertical"
     android:background="@android:color/transparent"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
+
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 <android.support.v7.widget.AppCompatImageView
     android:src="@drawable/heart"
+    android:layout_centerVertical="true"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/chnc1"
+
     android:layout_alignParentStart="true"
     android:layout_marginEnd="8dp"
     />
 
     <android.support.v7.widget.AppCompatImageView
-    android:src="@drawable/heart"
+        android:src="@drawable/heart"
+        android:layout_centerVertical="true"
     android:layout_width="wrap_content"
+
     android:layout_height="wrap_content"
         android:id="@+id/chnc2"
         android:layout_toEndOf="@id/chnc1"
         android:layout_marginEnd="8dp"
         />
     <android.support.v7.widget.AppCompatImageView
-    android:src="@drawable/heart"
+        android:src="@drawable/heart"
+        android:layout_centerVertical="true"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:id="@+id/chnc3"
         android:layout_toEndOf="@id/chnc2"
         android:layout_marginEnd="8dp"
@@ -46,7 +53,9 @@
         android:layout_height="wrap_content" />
     <android.support.v7.widget.AppCompatImageView
         android:src="@drawable/gold"
+        android:layout_centerVertical="true"
         android:layout_toEndOf="@id/points"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -65,7 +74,7 @@
         android:id="@+id/share"
 
         android:layout_alignParentEnd="true"
-        android:layout_gravity="center_vertical"
+
         android:layout_width="32dp"
         android:layout_height="32dp"/>
 

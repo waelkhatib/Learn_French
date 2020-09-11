@@ -10,6 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.ImageView;
 
@@ -24,6 +26,7 @@ import java.util.List;
 import static android.content.Context.MODE_PRIVATE;
 
 public class LevelHelper {
+    public static final int MY_PERMISSIONS_WRITE =43 ;
     private static final int request_code=32;
     private static List<Integer> QuestionOfLevel1;
     private static List<Integer> QuestionOfLevel2;
@@ -311,4 +314,6 @@ public class LevelHelper {
 
         return result;
     }
+
+
 }

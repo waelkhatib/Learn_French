@@ -30,7 +30,7 @@ public class Level {
             case 1:this.questions=LevelHelper.getQuestionOfLevel1();break;
             case 2:this.questions=LevelHelper.getQuestionOfLevel2();break;
             case 3:this.questions=LevelHelper.getQuestionOfLevel3();break;
-            default:this.questions=LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,levelNo);break;
+            default:this.questions=LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,3);break;
         }
         Collections.shuffle(this.questions);
 

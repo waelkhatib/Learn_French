@@ -1,10 +1,15 @@
 package com.waelalk.learnfrench.view;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.waelalk.learnfrench.R;
@@ -12,6 +17,8 @@ import com.waelalk.learnfrench.behavior.FirstLevelBehavior;
 import com.waelalk.learnfrench.behavior.Initialization;
 import com.waelalk.learnfrench.helper.LevelHelper;
 import com.waelalk.learnfrench.model.Level;
+
+import static com.waelalk.learnfrench.helper.LevelHelper.MY_PERMISSIONS_WRITE;
 
 public class FirstLevelActivity extends AppCompatActivity  implements View.OnClickListener {
 
@@ -24,6 +31,7 @@ public class FirstLevelActivity extends AppCompatActivity  implements View.OnCli
         long start=System.currentTimeMillis();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_level);
+
         Log.d("time",""+(System.currentTimeMillis()-start)/1000.0);
         LevelHelper levelHelper=new LevelHelper(this);
         Intent intent=getIntent();
@@ -32,6 +40,7 @@ public class FirstLevelActivity extends AppCompatActivity  implements View.OnCli
         Level level=content!=null?LevelHelper.getGame().getLevel() : new Level(1);
 
         behavior=new FirstLevelBehavior(this,levelHelper, level);
+        behavior.setStatusBarTransparent();
        behavior.startMusic();
 
        behavior. initViews();
@@ -74,5 +83,13 @@ public class FirstLevelActivity extends AppCompatActivity  implements View.OnCli
     protected void onPause() {
         super.onPause();
         behavior.stoptMusic();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_WRITE && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            behavior.share();
+        }
     }
 }

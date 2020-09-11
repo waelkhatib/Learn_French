@@ -19,7 +19,7 @@ public class SecondLevelBehavior extends FirstLevelBehavior {
 
     @Override
     public void initViews() {
-        initHeader();
+        initHeader(this);
         List<Translation> translations=LevelHelper.getDbHelper().getSpecificTranslations(LevelHelper.generateRandomOptions(4 ,getLevel().getQuestions().get(getLevel().getQuestionNo()-1)));
         TextView txtView =(TextView)getActivity(). findViewById(R.id.txtView);
 
@@ -43,12 +43,5 @@ public class SecondLevelBehavior extends FirstLevelBehavior {
         }
     }
 
-    @Override
-    public void share() {
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(Intent.EXTRA_TEXT, ((TextView)getActivity().findViewById(R.id.lbl)).getText().toString()+((TextView)getActivity().findViewById(R.id.txtView)).getText().toString());
-        getActivity(). startActivity(Intent.createChooser(sharingIntent, "Share Image Using"));
-    }
+
 }
