@@ -57,7 +57,7 @@ public class SecondLevelActivity extends AppCompatActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         behavior.resumeMusic();
-        behavior.initGraphic();
+
     }
 
     @Override
@@ -72,5 +72,6 @@ public class SecondLevelActivity extends AppCompatActivity implements View.OnCli
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             behavior.share();
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

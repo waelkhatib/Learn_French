@@ -31,15 +31,6 @@ public class LevelHelper {
     private static List<Integer> QuestionOfLevel1;
     private static List<Integer> QuestionOfLevel2;
 
-    public static WebView getSharedWebView() {
-        return sharedWebView;
-    }
-
-    public static void setSharedWebView(WebView sharedWebView) {
-        LevelHelper.sharedWebView = sharedWebView;
-    }
-
-    private static WebView sharedWebView;
 
     public static List<Integer> getQuestionOfLevel1() {
         return QuestionOfLevel1;
@@ -237,7 +228,7 @@ public class LevelHelper {
         return context.getPackageName();
     }
 
-    public void makeMessageBox(String title, String message, final int action, final Initialization behaviorActivity){
+    public void makeMessageBox( final int action, final Initialization behaviorActivity){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

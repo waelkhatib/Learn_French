@@ -20,30 +20,27 @@ import static com.waelalk.learnfrench.helper.LevelHelper.MY_PERMISSIONS_WRITE;
 public class FirstLevelActivity extends AppCompatActivity  implements View.OnClickListener {
 
 
-   private int[] viewIDs=new int[]{R.id.option1,R.id.option2,R.id.option3,R.id.option4};
-   private Initialization behavior;
+    private int[] viewIDs = new int[]{R.id.option1, R.id.option2, R.id.option3, R.id.option4};
+    private Initialization behavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        long start=System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_level);
 
-        Log.d("time",""+(System.currentTimeMillis()-start)/1000.0);
-        LevelHelper levelHelper=new LevelHelper(this);
-        Intent intent=getIntent();
-        String content=intent.getStringExtra(LevelHelper.getKEY());
+        Log.d("time", "" + (System.currentTimeMillis() - start) / 1000.0);
+        LevelHelper levelHelper = new LevelHelper(this);
+        Intent intent = getIntent();
+        String content = intent.getStringExtra(LevelHelper.getKEY());
 
-        Level level=content!=null?LevelHelper.getGame().getLevel() : new Level(1);
+        Level level = content != null ? LevelHelper.getGame().getLevel() : new Level(1);
 
-        behavior=new FirstLevelBehavior(this,levelHelper, level);
+        behavior = new FirstLevelBehavior(this, levelHelper, level);
         behavior.setStatusBarTransparent();
-       behavior.startMusic();
+        behavior.startMusic();
 
-       behavior. initViews();
-
-
-
+        behavior.initViews();
 
 
     }
@@ -58,7 +55,7 @@ public class FirstLevelActivity extends AppCompatActivity  implements View.OnCli
                 break;
             }
 
-    }
+        }
 
     }
 
@@ -70,10 +67,9 @@ public class FirstLevelActivity extends AppCompatActivity  implements View.OnCli
     @Override
     protected void onResume() {
         super.onResume();
-        long start=System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         behavior.resumeMusic();
-        behavior.initGraphic();
-        Log.d("time1",""+(System.currentTimeMillis()-start)/1000.0);
+        Log.d("time1", "" + (System.currentTimeMillis() - start) / 1000.0);
     }
 
     @Override
@@ -88,5 +84,6 @@ public class FirstLevelActivity extends AppCompatActivity  implements View.OnCli
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             behavior.share();
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

@@ -80,5 +80,10 @@
     android:layout="@layout/overlay"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
-
+    <ViewStub
+        android:id="@+id/web_import"
+        android:inflatedId="@+id/content_web"
+        android:layout="@layout/web"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     </RelativeLayout>

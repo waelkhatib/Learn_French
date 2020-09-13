@@ -33,33 +33,8 @@ public class SplashActivity extends AppCompatActivity {
             Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
-        final Handler handler = new Handler();
-        final Runnable uiRunnable=new Runnable() {
-            @Override
-            public void run() {
-                WebView webV=new WebView(getApplicationContext() );
-                webV.setVisibility(View.GONE);
-                webV.loadUrl("about:blank");
-                WebSettings settings =webV. getSettings();
-                settings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-                settings.setJavaScriptEnabled(true);
-                settings.setLoadWithOverviewMode(true);
-                settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-                settings.setDomStorageEnabled(true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    // chromium, enable hardware acceleration
-                    webV.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-                } else {
-                    // older android version, disable hardware acceleration
-                    webV.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                }
-                webV.setId(R.id.emot);
+        Handler handler = new Handler();
 
-                LevelHelper.setSharedWebView(webV);
-
-
-            }
-        };
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -67,7 +42,7 @@ public class SplashActivity extends AppCompatActivity {
                 LevelHelper.setQuestionOfLevel1(LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,1));
                 LevelHelper.setQuestionOfLevel2(LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,2));
                 LevelHelper.setQuestionOfLevel3(LevelHelper.generateRandomQuesions(LevelHelper.getQuestionCount()+2,3));
-                handler.postDelayed(uiRunnable,150);
+
 
             }
         }).start();

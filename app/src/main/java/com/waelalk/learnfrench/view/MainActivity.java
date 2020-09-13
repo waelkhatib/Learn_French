@@ -19,8 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         long start=System.currentTimeMillis();
         setContentView(R.layout.activity_main);
-       // ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        //Glide.with(this).asGif().load(R.drawable.win).into(imageView);
+
         Log.d("time",""+(System.currentTimeMillis()-start)/1000.0);
         checkIntent(getIntent());
         mediaPlayer=MediaPlayer.create(this,R.raw.music);

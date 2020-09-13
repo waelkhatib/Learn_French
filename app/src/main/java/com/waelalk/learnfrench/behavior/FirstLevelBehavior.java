@@ -15,6 +15,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Environment;
+
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,9 +36,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
-import com.tomergoldst.tooltips.ToolTip;
-import com.tomergoldst.tooltips.ToolTipsManager;
+import com.venmo.view.TooltipView;
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.helper.LevelHelper;
 import com.waelalk.learnfrench.model.Balloon;
@@ -55,11 +62,12 @@ import java.util.Random;
 
 public class FirstLevelBehavior implements Initialization {
     private int[] mBalloonColors=new int[3];
-    private ToolTipsManager mToolTipsManager;;
-    private String message="";
-    private boolean loaded=false;
-    private boolean stableStatus=false;
+    private ImageView imageView;;
+
+private boolean stableStatus=false;
     private ViewStub overlay;
+    private ViewStub web_import;
+    private TooltipView tooltipView;
     private static final int MIN_ANIMATION_DELAY = 500;
     private static final int MAX_ANIMATION_DELAY = 1500;
     private static final int MIN_ANIMATION_DURATION = 1000;
@@ -68,7 +76,7 @@ public class FirstLevelBehavior implements Initialization {
     private int mNextColor, mScreenWidth, mScreenHeight;
     private ViewGroup mContentView;;
     private List<Balloon> mBalloons = new ArrayList<>();
-    private WebView web=null;
+
     public FirstLevelBehavior(AppCompatActivity activity, LevelHelper levelHelper,Level level) {
         this.activity = activity;
         this.levelHelper = levelHelper;
@@ -76,7 +84,6 @@ public class FirstLevelBehavior implements Initialization {
         mBalloonColors[0] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorBlue);
         mBalloonColors[1] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorWhite);
         mBalloonColors[2] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorAccent);
-        mToolTipsManager=new ToolTipsManager();
         mContentView = (ViewGroup)getActivity(). findViewById(R.id.rlt_layout);
         ViewTreeObserver viewTreeObserver = mContentView.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
@@ -164,72 +171,31 @@ public class FirstLevelBehavior implements Initialization {
        activity. startActivity(Intent.createChooser(sharingIntent, "Share level"));
     }
 
-    @Override
-    public void initGraphic() {
-        if(getActivity().findViewById(R.id.emot)==null){
-            Log.d("kados","-----");
-            long start=System.currentTimeMillis();
-            WebView webV=LevelHelper.getSharedWebView();
-            Log.d("time2",""+(System.currentTimeMillis()-start)/1000.0);
-            float dip = 192f;
-            Resources r =getLevelHelper(). getResources();
-            float px = TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    dip,
-                    r.getDisplayMetrics()
-            );
-            RelativeLayout.LayoutParams layoutParams= new RelativeLayout.LayoutParams((int)px,(int)px);
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
-            ViewGroup relativeLayout=(ViewGroup)getActivity(). findViewById(R.id.rlt_layout);
-            if(webV.getParent() != null) {
-                ((ViewGroup)webV.getParent()).removeView(webV); // <- fix
-            }
-            relativeLayout.addView(webV, layoutParams);
-
-        }
-    }
 
     @Override
     public void checkAnswer(CharSequence answer) {
         levelHelper.getMainPlayer().pause();
+
         if(overlay==null){
             overlay=(ViewStub)getActivity().findViewById(R.id.sub_import);
             overlay.inflate();
+            web_import=(ViewStub)getActivity().findViewById(R.id.web_import);
+            View v= web_import.inflate();
+
+            imageView=v. findViewById(R.id.emot);
+            tooltipView=v.findViewById(R.id. tooltip);
         }
         overlay.setVisibility(View.VISIBLE);
-        web = (WebView)getActivity(). findViewById(R.id.emot);
-        web.setBackgroundColor(Color.TRANSPARENT); //for gif without background
-        loaded=true;
-        web.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                Log.d("dim","s3"+url);
-                if(loaded) {
-                    Log.d("dim","s4");
-                    view.setVisibility(View.VISIBLE);
 
 
-                }
-            }
-        });
-        web.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Log.d("dim","s1");
-                if(web.getVisibility()==View.VISIBLE && loaded){
-                    Log.d("dim","s2");
-                    ToolTip.Builder builder = new ToolTip.Builder(levelHelper.getContext(), web, (RelativeLayout) getActivity().findViewById(R.id.rlt_layout), message, ToolTip.POSITION_ABOVE);
-                    builder.setBackgroundColor(levelHelper.getResources().getColor(R.color.colorAccent));
-                    mToolTipsManager.show(builder.build());
-                    web.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            }
-        });
 
         SharedPreferences.Editor editor = levelHelper.getSharedPreferences().edit();
         //String message="";
         if(answer.equals(correctAnswer)){
             getLevel().updatePoints(LevelHelper.getPointValue());
+
+           Glide.with(getActivity()).asGif().load(R.drawable.win).into(imageView);
+
 
 
             if(getLevel().getQuestionNo()+1>LevelHelper.getQuestionCount()){
@@ -239,28 +205,30 @@ public class FirstLevelBehavior implements Initialization {
                 balloonLauncher.execute(1);
               int levelNo=getLevel().getLevelNo();
                 if(levelNo==1 || levelNo==2){
+                    showTooltip(levelHelper.getString(R.string.go_to_next_level));
                     LevelHelper.getGame().setLevel(new Level(getLevel().getLevelNo()+1));
                     LevelHelper.getGame().updateGeneralLevelNo();
-                    message=levelHelper.getString(R.string.go_to_next_level);
                 }else
                 if(levelNo>3){
-                    message=levelHelper.getString(R.string.all_phases_finish);
+                    showTooltip(levelHelper.getString(R.string.all_phases_finish));
+
                 }
-                web.loadUrl("file:///android_asset/win_html.html");
+
                 Log.d("-@-",new Gson().toJson(LevelHelper.getGame()));
                 editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
                 editor.apply();
-                levelHelper.makeMessageBox(levelHelper.getString(R.string.info), message, 2, this);
+                levelHelper.makeMessageBox( 2, this);
             }else {
                 getLevel().updateQuestionNo(1);
                 editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
                 editor.apply();
                 levelHelper.startWinTone();
-                message=levelHelper.getString(R.string.Your_answer_is_correct);
-                web.loadUrl("file:///android_asset/win_html.html");
-                levelHelper.makeMessageBox(levelHelper.getString(R.string.info), message, 1, this);
+                showTooltip(levelHelper.getString(R.string.Your_answer_is_correct));
+
+                levelHelper.makeMessageBox( 1, this);
             }
         }else {
+            Glide.with(getActivity()).asGif().load(R.drawable.lose).into(imageView);
 
 
             if (getLevel().getChancesNo() > 1) {
@@ -270,18 +238,17 @@ public class FirstLevelBehavior implements Initialization {
                 levelHelper.startFailTone();
                 editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
                 editor.apply();
-                message=levelHelper.getString(R.string.Your_answer_is_wrong);
-                web.loadUrl("file:///android_asset/lose_html.html");
-                levelHelper.  makeMessageBox(levelHelper.getString(R.string.warning),message,1,this);
+                showTooltip(levelHelper.getString(R.string.Your_answer_is_wrong));
+                levelHelper.  makeMessageBox(1,this);
             }else {
                 stableStatus=true;
                 levelHelper.startGameOverTone();
                 LevelHelper.getGame().setLevel(new Level(getLevel().getLevelNo()));
                 editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
                 editor.apply();
-                message=levelHelper.getString(R.string.game_over_label);
-                web.loadUrl("file:///android_asset/lose_html.html");
-                levelHelper. makeMessageBox(levelHelper.getString(R.string.warning),message,2,this);
+                showTooltip(levelHelper.getString(R.string.game_over_label));
+
+                levelHelper. makeMessageBox(2,this);
             }
 
         }
@@ -293,6 +260,12 @@ public class FirstLevelBehavior implements Initialization {
 
 
     }
+
+    private void showTooltip(String message) {
+        tooltipView.setText(message);
+        web_import.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
     public void makeEffect() {
@@ -347,22 +320,16 @@ public class FirstLevelBehavior implements Initialization {
         ((TextView)getActivity().findViewById(R.id.status)).setText(""+getLevel().getQuestionNoForHeader()+"/"+LevelHelper.getQuestionCount());
         if(overlay!=null){
             overlay.setVisibility(View.GONE);
+            web_import.setVisibility(View.GONE);
+
         }
-       //getActivity().findViewById(R.id.overlay).setVisibility(View.GONE);
-        WebView web = (WebView)getActivity(). findViewById(R.id.emot);
-           if(web!=null) {
-               Log.d("hiddemc", "--");
-               web.loadUrl("about:blank");
-               web.setVisibility(View.GONE);
-               loaded = false;
-           }
+
         timer.cancel();
         trans.resetTransition();
         if(getCorrectButton()!=null){
             getCorrectButton().setBackground(getLevelHelper().getResources().getDrawable(R.drawable.rectangle));
         }
-   //     if(builder!=null)
-        mToolTipsManager.dismissAll();
+
     }
 
     @Override
@@ -401,8 +368,6 @@ public class FirstLevelBehavior implements Initialization {
             editor.putString(LevelHelper.getKEY(),new Gson().toJson(LevelHelper.getGame()));
             editor.apply();
         }
-        if(web!=null)
-          web.setVisibility(View.GONE);
         if(activity.isTaskRoot()) {
             Intent intent=new Intent(getLevelHelper().getContext(),MainActivity.class);
             intent.putExtra("levelNo",LevelHelper.getGame().getGeneralevelNo());
