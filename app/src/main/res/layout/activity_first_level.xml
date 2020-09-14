@@ -7,8 +7,8 @@
 
     tools:context=".view.FirstLevelActivity"
     xmlns:tools="http://schemas.android.com/tools">
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
@@ -24,7 +24,8 @@
     android:layout_below="@id/header"
     android:background="@drawable/psttern1"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:contentDescription="TODO" />
         <ImageView
             android:layout_marginTop="16dp"
             android:id="@+id/imgView"
@@ -34,13 +35,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            />
+            android:contentDescription="TODO" />
         <TextView
             android:textColor="@android:color/white"
             android:textAllCaps="false"
             android:layout_below="@id/imgView"
             android:layout_centerHorizontal="true"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:id="@+id/lbl"
 
             android:text="@string/what_does_the_image_represent"

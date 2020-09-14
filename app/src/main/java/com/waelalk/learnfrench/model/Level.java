@@ -6,18 +6,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class Level {
-    private int levelNo;
+    private final int levelNo;
     private int questionNo;
 
     public List<Integer> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<Integer> questions) {
-        this.questions = questions;
-    }
-
-    private List<Integer> questions;
+    private final List<Integer> questions;
     private int chancesNo;
     private int points;
 
@@ -51,11 +47,6 @@ public class Level {
     public int getLevelNo() {
         return levelNo;
     }
-
-    public void setLevelNo(int levelNo) {
-        this.levelNo = levelNo;
-    }
-
 
 
     public int getChancesNo() {

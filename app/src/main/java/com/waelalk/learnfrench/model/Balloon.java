@@ -1,10 +1,10 @@
 package com.waelalk.learnfrench.model;
+
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
-
 
 import com.waelalk.learnfrench.R;
 import com.waelalk.learnfrench.helper.PixelHelper;
@@ -14,8 +14,6 @@ import com.waelalk.learnfrench.helper.PixelHelper;
  */
 
 public class Balloon extends androidx.appcompat.widget.AppCompatImageView implements Animator.AnimatorListener, ValueAnimator.AnimatorUpdateListener {
-
-    private ValueAnimator mAnimator;
 
 
     public Balloon(Context context) {
@@ -42,7 +40,7 @@ public class Balloon extends androidx.appcompat.widget.AppCompatImageView implem
 
     public void releaseBalloon(int screenHeight, int duration) {
 
-        mAnimator = new ValueAnimator();
+        ValueAnimator mAnimator = new ValueAnimator();
         mAnimator.setDuration(duration);
         mAnimator.setFloatValues(screenHeight, 0f);
         mAnimator.setInterpolator(new LinearInterpolator());

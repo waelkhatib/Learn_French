@@ -1,20 +1,13 @@
 package com.waelalk.learnfrench.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.os.Handler;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 
 import com.google.gson.Gson;
 import com.waelalk.learnfrench.R;
@@ -23,8 +16,10 @@ import com.waelalk.learnfrench.helper.LevelHelper;
 import com.waelalk.learnfrench.model.Game;
 import com.waelalk.learnfrench.model.Level;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class SplashActivity extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 500;
+    private static final int SPLASH_TIME_OUT = 500;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,17 +63,17 @@ public class SplashActivity extends AppCompatActivity {
                         case 1:
                             i = new Intent(SplashActivity.this, FirstLevelActivity.class);
                             i.putExtra(LevelHelper.getKEY(),text);
-                            startActivityForResult(i,LevelHelper.getRequestCode());
+                            startActivity(i);
                             break;
                         case 2:
                             i = new Intent(SplashActivity.this, SecondLevelActivity.class);
                             i.putExtra(LevelHelper.getKEY(),text);
-                            startActivityForResult(i,LevelHelper.getRequestCode());
+                            startActivity(i);
                             break;
                         case 3:
                             i = new Intent(SplashActivity.this, ThirdLevelActivity.class);
                             i.putExtra(LevelHelper.getKEY(),text);
-                            startActivityForResult(i,LevelHelper.getRequestCode());
+                            startActivity(i);
                             break;
                         default:
                           i = new Intent(SplashActivity.this, MainActivity.class);
@@ -92,18 +87,13 @@ public class SplashActivity extends AppCompatActivity {
             }
         }, SPLASH_TIME_OUT);
     }
-    private ViewGroup inflateLayout(int layoutId){
-        LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = vi.inflate(layoutId, null);
-        return (ViewGroup)v.findViewById(R.id.rlt_layout);
+// --Commented out by Inspection START (13/09/2020 23:22):
+//    private ViewGroup inflateLayout(int layoutId){
+//        LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View v = vi.inflate(layoutId, null);
+//        return (ViewGroup)v.findViewById(R.id.rlt_layout);
+//
+//    }
+// --Commented out by Inspection STOP (13/09/2020 23:22)
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
-
-    }
 }

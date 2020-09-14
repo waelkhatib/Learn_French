@@ -3,7 +3,7 @@ package com.waelalk.learnfrench.model;
 import java.util.Objects;
 
 public class Translation {
-    private int id;
+    private final int id;
     private String synonym;
     private String synonym_ar;
     private boolean is_correct;
@@ -14,14 +14,25 @@ public class Translation {
         this.synonym_ar = synonym_ar;
         this.is_correct = is_correct;
     }
-    public static  Translation getInstanceWithSynonym(String synonym){
-        return new Translation(-1,synonym,"",false);
-    }
-    public static  Translation getInstanceWithSynonymAr(String synonym_ar){
-        return new Translation(-1,"",synonym_ar,false);
-    }
 
+    // --Commented out by Inspection START (13/09/2020 23:22):
+//    public static  Translation getInstanceWithSynonym(String synonym){
+// --Commented out by Inspection START (13/09/2020 23:22):
+////        return new Translation(-1,synonym,"",false);
+////    }
+//// --Commented out by Inspection STOP (13/09/2020 23:22)
+// --Commented out by Inspection START (13/09/2020 23:22):
+////    public static  Translation getInstanceWithSynonymAr(String synonym_ar){
+//// --Commented out by Inspection STOP (13/09/2020 23:22)
+// --Commented out by Inspection START (13/09/2020 23:22):
+//// --Commented out by Inspection STOP (13/09/2020 23:22)
+// --Commented out by Inspection START (13/09/2020 23:22):
+////        return new Translation(-1,"",synonym_ar,false);
+//// --Commented out by Inspection STOP (13/09/2020 23:22)
+//    }
+//
     public int getId() {
+
         return id;
     }
 
@@ -29,12 +40,14 @@ public class Translation {
         return is_correct;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    // --Commented out by Inspection START (13/09/2020 23:22):
+//    public void setId(int id) {
+//        this.id = id;
+//    }
+//
     public String getSynonym() {
         return synonym;
+// --Commented out by Inspection STOP (13/09/2020 23:22)
     }
 
     public void setSynonym(String synonym) {

@@ -2,8 +2,6 @@ package com.waelalk.learnfrench.view;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,11 +12,14 @@ import com.waelalk.learnfrench.behavior.SecondLevelBehavior;
 import com.waelalk.learnfrench.helper.LevelHelper;
 import com.waelalk.learnfrench.model.Level;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import static com.waelalk.learnfrench.helper.LevelHelper.MY_PERMISSIONS_WRITE;
 
 public class SecondLevelActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private int[] viewIDs = new int[]{R.id.option1, R.id.option2, R.id.option3, R.id.option4};
+    private final int[] viewIDs = new int[]{R.id.option1, R.id.option2, R.id.option3, R.id.option4};
     private Initialization behavior;
 
     @Override
@@ -39,8 +40,8 @@ public class SecondLevelActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        for (int i = 0; i < viewIDs.length; i++) {
-            if (v == findViewById(viewIDs[i])) {
+        for (int viewID : viewIDs) {
+            if (v == findViewById(viewID)) {
                 behavior.makeEffect();
                 behavior.checkAnswer(((Button) v).getText());
                 break;

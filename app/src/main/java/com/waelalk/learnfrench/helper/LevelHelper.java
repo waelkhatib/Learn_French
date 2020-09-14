@@ -10,9 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
-import android.view.Window;
-import android.view.WindowManager;
-import android.webkit.WebView;
 import android.widget.ImageView;
 
 import com.waelalk.learnfrench.R;
@@ -27,9 +24,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class LevelHelper {
     public static final int MY_PERMISSIONS_WRITE =43 ;
-    private static final int request_code=32;
-    private static List<Integer> QuestionOfLevel1;
+    private static final int QuestionCount = 3;
     private static List<Integer> QuestionOfLevel2;
+    private static final int TotalPoint = 100;
 
 
     public static List<Integer> getQuestionOfLevel1() {
@@ -67,7 +64,7 @@ public class LevelHelper {
     }
 
     private static Game game;
-    private boolean is_released;
+    // --Commented out by Inspection (13/09/2020 23:22):private boolean is_released;
 
     public static String getSharedPrefs() {
         return SHARED_PREFS;
@@ -88,23 +85,31 @@ public class LevelHelper {
         return QuestionCount;
     }
 
-    private static int QuestionCount=3;
-    private static int TotalPoint=100;
+    private static final List<Integer> list = new ArrayList<>();
+    // --Commented out by Inspection (13/09/2020 23:29):private static final int request_code=32;
+    private static List<Integer> QuestionOfLevel1;
     public static int getPointValue(){
         return TotalPoint/QuestionCount;
     }
-    private static List<Integer> list = new ArrayList<Integer>();
 
-    public static int getRequestCode() {
-
-        return request_code;
+    static {
+        for (int i = 1; i <= BANK_QUESTION_NO; i++) {
+            list.add(i);
+        }
     }
+
+// --Commented out by Inspection START (13/09/2020 23:22):
+//    public static int getRequestCode() {
+//
+//        return request_code;
+//    }
+// --Commented out by Inspection STOP (13/09/2020 23:22)
 
     public Context getContext() {
         return context;
     }
 
-    private Context context;
+    // --Commented out by Inspection (13/09/2020 23:29):private Context context;
 
     public static DBHelper getDbHelper() {
         return dbHelper;
@@ -120,21 +125,9 @@ public class LevelHelper {
         return mainPlayer;
     }
 
-    private  MediaPlayer mainPlayer;
-
-    public LevelHelper(Context context) {
-        this.context = context;
-
-    }
-
-    public MediaPlayer getActionPlayer() {
-        return actionPlayer;
-    }
-
-    public void setActionPlayer(MediaPlayer actionPlayer) {
-        this.actionPlayer = actionPlayer;
-    }
-
+    private Context context;
+    // --Commented out by Inspection START (13/09/2020 23:22):
+    private MediaPlayer mainPlayer;
     private  MediaPlayer actionPlayer;
     public  void runBackgroundMusic(){
         mainPlayer=MediaPlayer.create(context,R.raw.music);
@@ -144,13 +137,14 @@ public class LevelHelper {
 
     private static final int BANK_QUESTION_NO =167 ;
 
-    static {
-        for (int i = 1; i <= BANK_QUESTION_NO; i++) {
-            list.add(new Integer(i));
-        }
+    //
+    public LevelHelper(Context context) {
+        this.context = context;
+
     }
+
     public static List<Integer> generateRandomQuesions(int count,int level){
-        List<Integer> listOfID = new ArrayList<Integer>();
+        List<Integer> listOfID = new ArrayList<>();
         List<Integer> temp=list.subList((BANK_QUESTION_NO/3)*(level-1),(BANK_QUESTION_NO/3)*(level)-1);
             Collections.shuffle(temp);
             for (int i=0; i<count; i++) {
@@ -160,9 +154,9 @@ public class LevelHelper {
         return listOfID;
     }
     public static List<Integer> generateRandomOptions(int count,int qId){
-        List<Integer> listOfID = new ArrayList<Integer>();
+        List<Integer> listOfID = new ArrayList<>();
            listOfID.add(qId);
-           list.remove(list.indexOf(qId));
+        list.remove(qId);
             Collections.shuffle(list);
             for (int i=0; i<count-1; i++) {
                 listOfID.add(list.get(i));
@@ -176,11 +170,11 @@ public class LevelHelper {
     public void startWinTone() {
         actionPlayer=MediaPlayer.create(context,R.raw.correct);
         actionPlayer.start();
-        is_released=false;
+
         actionPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mp.release();is_released=true;
+                mp.release();
             }
         });
     }
@@ -188,33 +182,33 @@ public class LevelHelper {
     public void startFailTone() {
         actionPlayer = MediaPlayer.create(context, R.raw.wrong);
         actionPlayer.start();
-        is_released=false;
+
         actionPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mp.release();is_released=true;
+                mp.release();
             }
         });
     }
     public void startGameOverTone() {
         actionPlayer = MediaPlayer.create(context, R.raw.game_over);
         actionPlayer.start();
-        is_released=false;
+
         actionPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mp.release();is_released=true;
+                mp.release();
             }
         });
     }
     public void startVictoryTone() {
         actionPlayer = MediaPlayer.create(context, R.raw.victory);
         actionPlayer.start();
-        is_released=false;
+
         actionPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mp.release();is_released=true;
+                mp.release();
             }
         });
     }

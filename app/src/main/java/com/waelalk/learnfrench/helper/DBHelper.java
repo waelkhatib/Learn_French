@@ -1,5 +1,16 @@
 package com.waelalk.learnfrench.helper;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
+import android.text.TextUtils;
+
+import com.waelalk.learnfrench.R;
+import com.waelalk.learnfrench.model.Translation;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,25 +20,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
-import android.text.TextUtils;
-
-import com.waelalk.learnfrench.R;
-import com.waelalk.learnfrench.model.Translation;
-
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "transl.db";
-    String table = "words";
-    String[] columnsToReturn = { "ID", "synonym","synonym_ar" };
+    private static final String DATABASE_NAME = "transl.db";
+    private final String table = "words";
+    private final String[] columnsToReturn = {"ID", "synonym", "synonym_ar"};
 
 
-    private Context context;
+    private final Context context;
     public DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 1);
         this.context=context;
@@ -57,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
 //                        stmt
 //                );
             }
-        }catch (IOException e){
+        } catch (IOException ignored) {
 
         }
 
@@ -86,7 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return translation;
     }
     public List<Translation> getSpecificTranslations(List<Integer> IDs) {
-        List<Translation> translateList = new ArrayList<Translation>();
+        List<Translation> translateList = new ArrayList<>();
         // Select All Query
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -104,6 +104,8 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         Collections.shuffle(translateList);
+        cursor.close();
+
         // return contact list
         return translateList;
     }

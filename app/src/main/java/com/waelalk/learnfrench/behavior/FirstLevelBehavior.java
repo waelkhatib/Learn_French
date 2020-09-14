@@ -5,9 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
@@ -15,33 +13,20 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Environment;
-
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 import com.venmo.view.TooltipView;
 import com.waelalk.learnfrench.R;
@@ -55,16 +40,18 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
-public class FirstLevelBehavior implements Initialization {
-    private int[] mBalloonColors=new int[3];
-    private ImageView imageView;;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-private boolean stableStatus=false;
+public class FirstLevelBehavior implements Initialization {
+    private final int[] mBalloonColors = new int[3];
+    private final ViewGroup mContentView;
+    private final AppCompatActivity activity;
     private ViewStub overlay;
     private ViewStub web_import;
     private TooltipView tooltipView;
@@ -74,8 +61,12 @@ private boolean stableStatus=false;
     private static final int MAX_ANIMATION_DURATION = 8000;
     private static final int BALLOONS_PER_LEVEL = 10;
     private int mNextColor, mScreenWidth, mScreenHeight;
-    private ViewGroup mContentView;;
-    private List<Balloon> mBalloons = new ArrayList<>();
+    private final TransitionDrawable trans;
+    //   private final List<Balloon> mBalloons = new ArrayList<>();
+    private final LevelHelper levelHelper;
+    private final CountDownTimer timer;
+    private ImageView imageView;
+    private boolean stableStatus = false;
 
     public FirstLevelBehavior(AppCompatActivity activity, LevelHelper levelHelper,Level level) {
         this.activity = activity;
@@ -84,7 +75,7 @@ private boolean stableStatus=false;
         mBalloonColors[0] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorBlue);
         mBalloonColors[1] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorWhite);
         mBalloonColors[2] = ContextCompat.getColor(getLevelHelper().getContext(),R.color.colorAccent);
-        mContentView = (ViewGroup)getActivity(). findViewById(R.id.rlt_layout);
+        mContentView = getActivity().findViewById(R.id.rlt_layout);
         ViewTreeObserver viewTreeObserver = mContentView.getViewTreeObserver();
         if (viewTreeObserver.isAlive()) {
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -109,39 +100,32 @@ private boolean stableStatus=false;
         };
 
     }
-    public AppCompatActivity getActivity() {
+
+    AppCompatActivity getActivity() {
         return activity;
     }
 
-    private AppCompatActivity activity;
-
-    private TransitionDrawable trans;
-
-    public LevelHelper getLevelHelper() {
+    LevelHelper getLevelHelper() {
         return levelHelper;
-    }
-
-    private LevelHelper levelHelper;
-
-    public void setCorrectAnswer(String correctAnswer) {
-        this.correctAnswer = correctAnswer;
     }
 
     private String correctAnswer;
 
-    private CountDownTimer timer;
+    void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
 
-    public View getCorrectButton() {
+    private View getCorrectButton() {
         return correctButton;
     }
 
-    public void setCorrectButton(View correctButton) {
+    void setCorrectButton(View correctButton) {
         this.correctButton = correctButton;
     }
 
     private View correctButton=null;
 
-    public Level getLevel() {
+    Level getLevel() {
         return LevelHelper.getGame().getLevel();
     }
 
@@ -177,9 +161,9 @@ private boolean stableStatus=false;
         levelHelper.getMainPlayer().pause();
 
         if(overlay==null){
-            overlay=(ViewStub)getActivity().findViewById(R.id.sub_import);
+            overlay = getActivity().findViewById(R.id.sub_import);
             overlay.inflate();
-            web_import=(ViewStub)getActivity().findViewById(R.id.web_import);
+            web_import = getActivity().findViewById(R.id.web_import);
             View v= web_import.inflate();
 
             imageView=v. findViewById(R.id.emot);
@@ -276,9 +260,7 @@ private boolean stableStatus=false;
     }
 
 
-
-
-    public void initHeader(final Initialization initialization){
+    void initHeader(final Initialization initialization) {
        getActivity(). findViewById(R.id.share).setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
@@ -337,15 +319,23 @@ private boolean stableStatus=false;
         initHeader(this);
         List<Translation> translations=LevelHelper.getDbHelper().getSpecificTranslations(LevelHelper.generateRandomOptions(4 ,getLevel().getQuestions().get(getLevel().getQuestionNo()-1)));
 
-        ImageView imageView=(ImageView)getActivity().findViewById(R.id.imgView);
+        ImageView imageView = getActivity().findViewById(R.id.imgView);
         Button opt_btn=null;
         for(int i=0;i<translations.size();i++){
             Translation translation=translations.get(i);
             switch (i){
-                case 0:opt_btn=(Button)getActivity().findViewById(R.id.option1);break;
-                case 1:opt_btn=(Button)getActivity().findViewById(R.id.option2);break;
-                case 2:opt_btn=(Button)getActivity().findViewById(R.id.option3);break;
-                case 3:opt_btn=(Button)getActivity().findViewById(R.id.option4);break;
+                case 0:
+                    opt_btn = getActivity().findViewById(R.id.option1);
+                    break;
+                case 1:
+                    opt_btn = getActivity().findViewById(R.id.option2);
+                    break;
+                case 2:
+                    opt_btn = getActivity().findViewById(R.id.option3);
+                    break;
+                case 3:
+                    opt_btn = getActivity().findViewById(R.id.option4);
+                    break;
             }
             opt_btn.setText(translation.getSynonym());
             if(translation.isCorrect()){
@@ -382,14 +372,12 @@ private boolean stableStatus=false;
         activity.finish();
 
     }
-    public void setCardColorTran(View view) {
+
+    private void setCardColorTran(View view) {
 
 
-        if(Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackgroundDrawable(trans);
-        }else {
             view.setBackground(trans);
-        }
+
 
     }
 
@@ -442,7 +430,7 @@ private boolean stableStatus=false;
     private void launchBalloon(int x) {
 
         Balloon balloon = new Balloon(getLevelHelper().getContext(), mBalloonColors[mNextColor], 150);
-        mBalloons.add(balloon);
+        //     mBalloons.add(balloon);
 
         if (mNextColor + 1 == mBalloonColors.length) {
             mNextColor = 0;
@@ -471,10 +459,11 @@ private boolean stableStatus=false;
             window.addFlags(flags);
         }
     }
-    public String SaveBackground()
+
+    String SaveBackground()
     {
         Bitmap bitmap;
-        RelativeLayout panelResult = (RelativeLayout)getActivity(). findViewById(R.id.rlt_layout);
+        RelativeLayout panelResult = getActivity().findViewById(R.id.rlt_layout);
         panelResult.invalidate();
         panelResult.setDrawingCacheEnabled(true);
         panelResult.buildDrawingCache();
@@ -484,17 +473,12 @@ private boolean stableStatus=false;
         int j = displaymetrics.widthPixels;
         bitmap = Bitmap.createScaledBitmap(Bitmap.createBitmap(panelResult.getDrawingCache()), j, i, true);
         panelResult.setDrawingCacheEnabled(false);
-        String s = null;
+        String s;
         File file;
-        boolean flag;
         StringBuilder sb = new StringBuilder();
         sb.append(Environment.getExternalStorageDirectory().toString()).append(File.separator).append(getLevelHelper(). getString(R.string.app_name));
         file = new File(sb.toString());
-        flag = file.isDirectory();
-        s = null;
-        if (flag)
-        {
-        }
+        file.isDirectory();
         file.mkdir();
         FileOutputStream fileoutputstream1 = null;
         s = (new StringBuilder(String.valueOf("guess"))).append("_sound_").append(System.currentTimeMillis()).append(".png").toString();

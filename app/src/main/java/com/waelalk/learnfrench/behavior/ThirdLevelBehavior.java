@@ -3,7 +3,6 @@ package com.waelalk.learnfrench.behavior;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -18,6 +17,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class ThirdLevelBehavior extends FirstLevelBehavior {
 
     public ThirdLevelBehavior(AppCompatActivity activity, LevelHelper levelHelper, Level level) {
@@ -28,7 +29,7 @@ public class ThirdLevelBehavior extends FirstLevelBehavior {
     public void initViews() {
         initHeader(this);
 
-        ImageView imageView = (ImageView) getActivity().findViewById(R.id.imgView);
+        ImageView imageView = getActivity().findViewById(R.id.imgView);
         ((EditText)getActivity(). findViewById(R.id.input_txt)).setText("");
         Translation translation = LevelHelper.getDbHelper().getSingleTranslate(getLevel().getQuestions().get(getLevel().getQuestionNo() - 1));
         if (translation.isCorrect()) {
@@ -60,8 +61,8 @@ public class ThirdLevelBehavior extends FirstLevelBehavior {
             }
             in.close();
             out.close();
+        } catch (Exception ignored) {
         }
-        catch (Exception e) {}
 
         Intent share = new Intent(Intent.ACTION_SEND_MULTIPLE);
         share.setType("*/*");

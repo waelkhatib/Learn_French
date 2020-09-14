@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -20,6 +17,9 @@ import com.waelalk.learnfrench.behavior.Initialization;
 import com.waelalk.learnfrench.behavior.ThirdLevelBehavior;
 import com.waelalk.learnfrench.helper.LevelHelper;
 import com.waelalk.learnfrench.model.Level;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import static com.waelalk.learnfrench.helper.LevelHelper.MY_PERMISSIONS_WRITE;
 
@@ -37,7 +37,7 @@ public class ThirdLevelActivity extends AppCompatActivity implements View.OnClic
         Level level=content!=null?LevelHelper.getGame().getLevel() : new Level(3);
         behavior=new ThirdLevelBehavior(this,levelHelper,level);
         behavior.setStatusBarTransparent();
-        input_text=(EditText)findViewById(R.id.input_txt);
+        input_text = findViewById(R.id.input_txt);
         input_text.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
