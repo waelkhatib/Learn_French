@@ -298,8 +298,8 @@ public class FirstLevelBehavior implements Initialization {
                 break;
             default:break;
         }
-        ((TextView)getActivity().findViewById(R.id.points)).setText(""+getLevel().getPoints());
-        ((TextView)getActivity().findViewById(R.id.status)).setText(""+getLevel().getQuestionNoForHeader()+"/"+LevelHelper.getQuestionCount());
+        ((TextView) getActivity().findViewById(R.id.points)).setText(String.format(Locale.ENGLISH, "%d", getLevel().getPoints()));
+        ((TextView) getActivity().findViewById(R.id.status)).setText(String.format(Locale.ENGLISH, "%d//%d", getLevel().getQuestionNoForHeader(), LevelHelper.getQuestionCount()));
         if(overlay!=null){
             overlay.setVisibility(View.GONE);
             web_import.setVisibility(View.GONE);

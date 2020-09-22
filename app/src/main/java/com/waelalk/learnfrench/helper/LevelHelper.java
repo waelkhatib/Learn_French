@@ -85,6 +85,7 @@ public class LevelHelper {
         return QuestionCount;
     }
 
+    private static final int BANK_QUESTION_NO = 167;
     private static final List<Integer> list = new ArrayList<>();
     // --Commented out by Inspection (13/09/2020 23:29):private static final int request_code=32;
     private static List<Integer> QuestionOfLevel1;
@@ -135,7 +136,6 @@ public class LevelHelper {
         mainPlayer.start();
     }
 
-    private static final int BANK_QUESTION_NO =167 ;
 
     //
     public LevelHelper(Context context) {

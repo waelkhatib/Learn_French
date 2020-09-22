@@ -138,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/app_name"
                 android:src="@drawable/open_lock" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -205,7 +205,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/app_name"
                 android:src="@drawable/lock" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -273,7 +273,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/app_name"
                 android:src="@drawable/lock" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

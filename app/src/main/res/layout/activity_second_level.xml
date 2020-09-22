@@ -42,7 +42,7 @@
 
 
             android:textSize="20sp"
-            android:text="Livre"
+
             android:id="@+id/txtView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -50,25 +50,25 @@
         <Button
             android:layout_below="@id/greenBg"
             android:id="@+id/option1"
-            android:text="ddfdsds"
+
             style="@style/buttonStyle"
             android:onClick="onClick"/>
         <Button
             android:layout_below="@id/option1"
             android:id="@+id/option2"
-            android:text="ddfdsds"
+
             style="@style/buttonStyle"
             android:onClick="onClick"/>
         <Button
             android:layout_below="@id/option2"
             android:id="@+id/option3"
-            android:text="ddfdsds"
+
             style="@style/buttonStyle"
             android:onClick="onClick"/>
         <Button
             android:layout_below="@id/option3"
             android:id="@+id/option4"
-            android:text="ddfdsds"
+
             style="@style/buttonStyle"
             android:onClick="onClick"/>
 

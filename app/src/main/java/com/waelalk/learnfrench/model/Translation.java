@@ -50,21 +50,27 @@ public class Translation {
 // --Commented out by Inspection STOP (13/09/2020 23:22)
     }
 
-    public void setSynonym(String synonym) {
-        this.synonym = synonym;
-    }
-
+    // --Commented out by Inspection START (22/09/2020 08:12):
+//    public void setSynonym(String synonym) {
+//        this.synonym = synonym;
+//    }
+// --Commented out by Inspection START (22/09/2020 08:12):
+//// --Commented out by Inspection STOP (22/09/2020 08:12)
+//
     public String getSynonym_ar() {
         return synonym_ar;
+// --Commented out by Inspection STOP (22/09/2020 08:12)
     }
 
     public void setSynonym_ar(String synonym_ar) {
         this.synonym_ar = synonym_ar;
     }
 
-    public void setIs_correct(boolean is_correct) {
-        this.is_correct = is_correct;
-    }
+// --Commented out by Inspection START (22/09/2020 08:12):
+//    public void setIs_correct(boolean is_correct) {
+//        this.is_correct = is_correct;
+//    }
+// --Commented out by Inspection STOP (22/09/2020 08:12)
 
     @Override
     public boolean equals(Object o) {

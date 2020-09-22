@@ -18,4 +18,5 @@
     <string name="This_level_is_locked">This level is locked</string>
     <string name="go_to_next_level">Congratulations ... you have finished this level and you can move to the next level</string>
     <string name="all_phases_finish">Congratulations ... you have finished all phases of the game</string>
+    <string name="_0" translatable="false">0</string>
 </resources>
