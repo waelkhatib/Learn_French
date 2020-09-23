@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -185,7 +186,7 @@ public class FirstLevelBehavior implements Initialization {
             if(getLevel().getQuestionNo()+1>LevelHelper.getQuestionCount()){
                 stableStatus=true;
               levelHelper.startVictoryTone();
-                BalloonLauncher balloonLauncher = new BalloonLauncher();
+                BalloonLauncher balloonLauncher = new BalloonLauncher(this);
                 balloonLauncher.execute(1);
               int levelNo=getLevel().getLevelNo();
                 if(levelNo==1 || levelNo==2){
@@ -299,7 +300,7 @@ public class FirstLevelBehavior implements Initialization {
             default:break;
         }
         ((TextView) getActivity().findViewById(R.id.points)).setText(String.format(Locale.ENGLISH, "%d", getLevel().getPoints()));
-        ((TextView) getActivity().findViewById(R.id.status)).setText(String.format(Locale.ENGLISH, "%d//%d", getLevel().getQuestionNoForHeader(), LevelHelper.getQuestionCount()));
+        ((TextView) getActivity().findViewById(R.id.status)).setText(String.format(Locale.ENGLISH, "%d/%d", getLevel().getQuestionNoForHeader(), LevelHelper.getQuestionCount()));
         if(overlay!=null){
             overlay.setVisibility(View.GONE);
             web_import.setVisibility(View.GONE);
@@ -381,8 +382,13 @@ public class FirstLevelBehavior implements Initialization {
 
     }
 
-    private class BalloonLauncher extends AsyncTask<Integer, Integer, Void> {
+    private static class BalloonLauncher extends AsyncTask<Integer, Integer, Void> {
+        private final WeakReference<FirstLevelBehavior> activityReference;
 
+        // only retain a weak reference to the activity
+        BalloonLauncher(FirstLevelBehavior context) {
+            activityReference = new WeakReference<>(context);
+        }
         @Override
         protected Void doInBackground(Integer... params) {
 
@@ -401,7 +407,7 @@ public class FirstLevelBehavior implements Initialization {
 
 //              Get a random horizontal position for the next balloon
                 Random random = new Random();
-                int xPosition = random.nextInt(mScreenWidth - 200);
+                int xPosition = random.nextInt(activityReference.get().mScreenWidth - 200);
                 publishProgress(xPosition);
                 balloonsLaunched++;
 
@@ -422,7 +428,7 @@ public class FirstLevelBehavior implements Initialization {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             int xPosition = values[0];
-            launchBalloon(xPosition);
+            activityReference.get().launchBalloon(xPosition);
         }
 
     }

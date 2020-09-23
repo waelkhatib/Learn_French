@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class Translation {
     private final int id;
-    private String synonym;
+    private final String synonym;
     private String synonym_ar;
-    private boolean is_correct;
+    private final boolean is_correct;
 
     public Translation(int id, String synonym, String synonym_ar, boolean is_correct) {
         this.id = id;

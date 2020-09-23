@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,16 +28,16 @@ public class DBHelper extends SQLiteOpenHelper {
     private final String[] columnsToReturn = {"ID", "synonym", "synonym_ar"};
 
 
-    private final Context context;
+    private final WeakReference<Context> context;
     public DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 1);
-        this.context=context;
+        this.context = new WeakReference<>(context);
      }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         // TODO Auto-generated method stub
-        final Resources resources = context.getResources();
+        final Resources resources = context.get().getResources();
         InputStream inputStream = resources.openRawResource(R.raw.transl);
 
         StringBuilder text = new StringBuilder();
